@@ -91,7 +91,6 @@ class DbGenerator extends Generator {
       }
     }
 
-    print("LEN=${library.annotatedWithExact(_jsonWebCallChecker).length}");
     for (var annotatedElement
         in library.annotatedWith(_jsonWebCallChecker)) {
       _generateWebCall(
