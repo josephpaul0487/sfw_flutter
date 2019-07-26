@@ -1,0 +1,16 @@
+targets:
+  $default:
+    builders:
+      sfw_generator|entities:
+        enabled: true
+
+builders:
+  sfw_flutter:
+
+    target: ":sfw_generator"
+    import: "package:sfw_generator/builder.dart"
+    builder_factories: ["db"]
+    build_extensions: {".dart": [".entities.sfw"]}
+    auto_apply: dependents
+    build_to: source
+    applies_builders: ["source_gen|combining_builder"]
