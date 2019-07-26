@@ -8,6 +8,10 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  sfw_generator:
+    git:
+      url: git://github.com/josephpaul0487/sfw_flutter.git
+      path: sfw_generator
   flutter:
     sdk: flutter
 

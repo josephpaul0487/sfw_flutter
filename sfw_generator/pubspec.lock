@@ -350,9 +350,11 @@ packages:
   sfw_imports:
     dependency: "direct main"
     description:
-      path: "..\\sfw_imports"
-      relative: true
-    source: path
+      path: sfw_imports
+      ref: HEAD
+      resolved-ref: "703e04d8e7e39b706c42c7efc7ad14cb8b9cce13"
+      url: "git://github.com/josephpaul0487/sfw_flutter.git"
+    source: git
     version: "0.0.1"
   shelf:
     dependency: transitive
