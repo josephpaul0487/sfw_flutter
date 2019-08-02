@@ -146,6 +146,7 @@ class DbGenerator extends Generator {
         }
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
+        loadAssets(queryBuffer,buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
       StringBuffer s = StringBuffer();
@@ -165,7 +166,7 @@ class DbGenerator extends Generator {
         s.writeln(entityGenerator.error);
       }
 
-      loadAssets(s,buildStep);
+
 
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
@@ -518,8 +519,9 @@ class DbGenerator extends Generator {
 
   void loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln("String ddddd='ffertertetet';");
-    String str= await buildStep.readAsString(AssetId("sfw_generator", "test.txt"));
-    s.writeln("String ssss='$str';");
+ s.writeln("Build input = "+buildStep.inputId.package);
+//    String str= await buildStep.readAsString(AssetId("sfw_generator", "test.txt"));
+//    s.writeln("String ssss='$str';");
 //    DefaultAssetBundle bundle=DefaultAssetBundle.of(context);
 //    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
   }
