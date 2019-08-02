@@ -109,13 +109,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  fluttertoast:
-    dependency: transitive
-    description:
-      name: fluttertoast
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.0"
   front_end:
     dependency: transitive
     description:
@@ -212,7 +205,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "144c3bc64d037d280e531a2f2751b880a83ece40"
+      resolved-ref: f2b97cd59c974128f36dd210cf60bee429863513
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -221,7 +214,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "144c3bc64d037d280e531a2f2751b880a83ece40"
+      resolved-ref: f2b97cd59c974128f36dd210cf60bee429863513
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
