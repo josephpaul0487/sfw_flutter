@@ -421,8 +421,11 @@ class DbGenerator extends Generator {
 //    _dbBuffer.writeln("import 'dart:io';");
     _dbBuffer.writeln("import 'dart:convert' as JSON;");
     _dbBuffer.writeln("import 'dart:core';");
+    _dbBuffer.writeln("import 'package:intl/intl.dart';");
+    _dbBuffer.writeln("import 'package:flutter/cupertino.dart';");
     _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
-    _dbBuffer.writeln("import 'package:flutter/material.dart' show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle;");
+    _dbBuffer.writeln("import 'package:flutter_screenutil/flutter_screenutil.dart';");
+    _dbBuffer.writeln("import 'package:flutter/material.dart' show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle,StatefulWidget,State;");
     _imports.forEach((import) {
       _dbBuffer.writeln(import);
     });
@@ -518,27 +521,19 @@ class DbGenerator extends Generator {
   }
 
   Future loadAssets(StringBuffer s,BuildStep buildStep) async {
-    s.writeln("String ddddd='${buildStep.inputId.package} ${buildStep.inputId.path}';");
-    s.writeln("//rfreteresfsf");
-    try {
-      String str= await buildStep.readAsString(AssetId(buildStep.inputId.package, "lib/test.txt"));
-      s.writeln("String ssss='$str';");
-    } catch(e){
-      entityGenerator.error=e.toString();
-      s.writeln("/*Input package error $e*/");
-    }
-    s.writeln("//radadaEDDDDfreteresfsf");
-
-    try {
-      String str= await buildStep.readAsString(AssetId("sfw_generator", "lib/test.txt"));
-      s.writeln("String ssss='$str';");
-    } catch(e){
-      entityGenerator.error=e.toString();
-      s.writeln("/*generator package error $e*/");
-    }
-    s.writeln("///dddddddddddddddddddddddddddddddddddddddddddddddddd");
-
-//    DefaultAssetBundle bundle=DefaultAssetBundle.of(context);
-//    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
+    await writeAsset(s, AssetId("sfw_generator", "lib/src/animation_helper.d"), buildStep);
+    await writeAsset(s, AssetId("sfw_generator", "lib/src/app_helper.d"), buildStep);
+    await writeAsset(s, AssetId("sfw_generator", "lib/src/error_remover.d"), buildStep);
+    await writeAsset(s, AssetId("sfw_generator", "lib/src/sfw_ui.d"), buildStep);
   }
+
+  Future<String> writeAsset(StringBuffer s,AssetId assetId,BuildStep buildStep) async {
+    try {
+      return await buildStep.readAsString(assetId);
+    } catch(e){
+      return "";
+    }
+  }
+
+
 }
