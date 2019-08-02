@@ -11,11 +11,13 @@ import 'entity.dart' as entityGenerator;
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
 Set<String> _imports = {};
-String lastDartFileName = "";
+//String lastDartFileName = "";
 StringBuffer _dbBuffer = StringBuffer();
 StringBuffer queryBuffer = StringBuffer();
 StringBuffer webQueryBuffer = StringBuffer();
 StringBuffer webConfigBuffer = StringBuffer();
+int filesFinished=0;
+int totalFileCount=-1;
 
 //flutter packages pub run build_runner clean
 //flutter packages pub run build_runner build
@@ -26,11 +28,11 @@ class DbGenerator extends Generator {
   @override
   FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
     log.warning("FILE :  ${library.element.source.shortName}");
+    ++filesFinished;
 
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
         entityGenerator.EntitiesGenerator();
-    print("entity=$lastDartFileName  ${library.annotatedWith(TypeChecker.fromRuntime(SfwEntity)).length}");
     for (var annotatedElement
         in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
       entities.generateForAnnotatedElement(
@@ -42,13 +44,15 @@ class DbGenerator extends Generator {
     _mainBuffer.addAll(entityGenerator.mainBuffer);
     entityGenerator.imports.clear();
     entityGenerator.mainBuffer.clear();
-    if (lastDartFileName == "") {
+    if (totalFileCount == -1) {
       for (var annotatedElement
           in library.annotatedWith(TypeChecker.fromRuntime(SfwDbConfig))) {
         String query = generateForAnnotatedElement(
             annotatedElement.element, annotatedElement.annotation, buildStep);
-        lastDartFileName =
-            annotatedElement.annotation.read('lastDartFileName').stringValue;
+//        lastDartFileName =
+//            annotatedElement.annotation.read('lastDartFileName').stringValue;
+        totalFileCount =
+            annotatedElement.annotation.read('totalFileCount').intValue;
 
         queryBuffer.clear();
         queryBuffer.writeln('class ${annotatedElement.element.name} {');
@@ -59,7 +63,6 @@ class DbGenerator extends Generator {
       }
     }
 
-    print("DartLast=$lastDartFileName  ${queryBuffer.length}");
 
     if (webConfigBuffer.isEmpty) {
       for (var annotatedElement
@@ -98,8 +101,10 @@ class DbGenerator extends Generator {
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }
 
-    if (lastDartFileName == library.element.source.shortName ||
-        "$lastDartFileName.dart" == library.element.source.shortName) {
+//    if (lastDartFileName == library.element.source.shortName ||
+//        "$lastDartFileName.dart" == library.element.source.shortName) {
+    if (totalFileCount>-1 &&
+        totalFileCount==filesFinished) {
       if (entityGenerator.error == null) {
         _dbBuffer.write(entityGenerator.createStatements);
         _dbBuffer.writeln(
