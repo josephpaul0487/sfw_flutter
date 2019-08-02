@@ -27,8 +27,9 @@ class DbGenerator extends Generator {
 
   @override
   FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
-    log.warning("FILE :  ${library.element.source.shortName}");
+
     ++filesFinished;
+    log.warning("FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
 
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
@@ -420,7 +421,7 @@ class DbGenerator extends Generator {
     _dbBuffer.writeln("import 'dart:convert' as JSON;");
     _dbBuffer.writeln("import 'dart:core';");
     _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
-    _dbBuffer.writeln("import 'package:flutter/material.dart' show BuildContext,TextSpan,RichText,DefaultTextStyle;");
+    _dbBuffer.writeln("import 'package:flutter/material.dart' show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle;");
     _imports.forEach((import) {
       _dbBuffer.writeln(import);
     });
