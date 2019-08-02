@@ -1,5 +1,4 @@
 library sfw_imports;
-export 'src/animation_helper.dart';
 export 'src/app_helper.dart';
 export 'src/app_interfaces.dart';
 export 'src/db.dart';

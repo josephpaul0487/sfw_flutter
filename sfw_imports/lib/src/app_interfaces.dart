@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show VoidCallback;
+
 
 typedef OnClickCallback = void Function();
 typedef OnClickCallbackWithTag = void Function(Object tag);
@@ -8,7 +8,7 @@ typedef OnClickCallback2 = bool Function();
 class OnClickListener {
   bool clicked = false;
   final Object tag;
-  final VoidCallback listener;
+  final Function() listener;
   final OnClickCallbackWithTag listenerWithTag;
 
   OnClickListener({this.listener,this.listenerWithTag,this.tag});
