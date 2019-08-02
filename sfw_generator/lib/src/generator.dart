@@ -519,12 +519,14 @@ class DbGenerator extends Generator {
 
   void loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln("String ddddd='${buildStep.inputId.package} ${buildStep.inputId.path}';");
+    s.writeln("//rfreteresfsf");
     try {
       String str= await buildStep.readAsString(AssetId(buildStep.inputId.package, "lib/test.txt"));
       s.writeln("String ssss='$str';");
     } catch(e){
       s.writeln("/*Input package error $e*/");
     }
+    s.writeln("//radadaEDDDDfreteresfsf");
 
     try {
       String str= await buildStep.readAsString(AssetId("sfw_generator", "lib/test.txt"));
