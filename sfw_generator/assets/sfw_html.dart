@@ -1,8 +1,3 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart' show BuildContext,TextSpan,RichText,DefaultTextStyle;
-
-
 
 class SfwHtmlParser {
   static SfwHtmlParser parser;

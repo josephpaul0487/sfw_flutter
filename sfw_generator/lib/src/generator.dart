@@ -6,6 +6,7 @@ import 'package:build/build.dart';
 import 'package:sfw_imports/sfw_imports.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'entity.dart' as entityGenerator;
 
@@ -158,6 +159,8 @@ class DbGenerator extends Generator {
         s.writeln(entityGenerator.error);
       }
 
+      loadAssets(s);
+
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
         assert(value == null || (value.length == value.trim().length));
@@ -183,7 +186,6 @@ class DbGenerator extends Generator {
           element: element);
     }
     DartObject dartObject = _jsonWebCallChecker.firstAnnotationOfExact(element);
-    print("DART IS EMPTY ${dartObject==null}");
     if (dartObject != null) {
       final String responseClassType =
           "${dartObject.getField('responseClassType').toTypeValue()}";
@@ -412,7 +414,8 @@ class DbGenerator extends Generator {
 //    _dbBuffer.writeln("import 'dart:io';");
     _dbBuffer.writeln("import 'dart:convert' as JSON;");
     _dbBuffer.writeln("import 'dart:core';");
-    _dbBuffer.writeln("import 'dart:ui' show VoidCallback;");
+    _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
+    _dbBuffer.writeln("import 'package:flutter/material.dart' show BuildContext,TextSpan,RichText,DefaultTextStyle;");
     _imports.forEach((import) {
       _dbBuffer.writeln(import);
     });
@@ -505,5 +508,9 @@ class DbGenerator extends Generator {
     _dbBuffer.writeln(
         '_db.update(table,values,where:where,whereArgs:whereArgs,conflictAlgorithm:conflictAlgorithm);');
     _dbBuffer.writeln();
+  }
+
+  void loadAssets(StringBuffer s) async {
+    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
   }
 }
