@@ -519,7 +519,9 @@ class DbGenerator extends Generator {
 
   void loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln("String ddddd='${buildStep.inputId.package} ${buildStep.inputId.path}';");
-    String str= await buildStep.readAsString(AssetId("sfw_generator", "lib/src/assets/test.txt"));
+    String str= await buildStep.readAsString(AssetId(buildStep.inputId.package, "lib/test.txt"));
+    s.writeln("String ssss='$str';");
+    str= await buildStep.readAsString(AssetId("sfw_generator", "lib/test.txt"));
     s.writeln("String ssss='$str';");
 //    DefaultAssetBundle bundle=DefaultAssetBundle.of(context);
 //    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
