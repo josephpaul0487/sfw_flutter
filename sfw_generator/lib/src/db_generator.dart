@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'package:analyzer/dart/element/element.dart';
-import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
 
 import 'package:analyzer/dart/constant/value.dart';
-
+import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart';
 import 'package:sfw_imports/sfw_imports.dart';
+import 'package:source_gen/source_gen.dart';
 
 int totalElements = 0;
 LibraryReader _library;

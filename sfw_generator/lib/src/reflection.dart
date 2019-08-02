@@ -1,7 +1,7 @@
-import 'package:analyzer/dart/element/element.dart';
-import 'package:source_gen/source_gen.dart';
 import 'package:analyzer/dart/constant/value.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:sfw_imports/sfw_imports.dart' ;
+import 'package:source_gen/source_gen.dart';
 
 final _jsonKeyChecker = const TypeChecker.fromRuntime(SfwEntity);
 final _dbNameChecker = const TypeChecker.fromRuntime(SfwDbField);

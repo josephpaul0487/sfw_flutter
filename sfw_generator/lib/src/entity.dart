@@ -1,9 +1,10 @@
+import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:build/build.dart';
-import 'package:source_gen/source_gen.dart';
 import 'package:analyzer/src/dart/resolver/inheritance_manager.dart'
     show InheritanceManager; // ignore: deprecated_member_use
-import 'package:analyzer/dart/constant/value.dart';
+import 'package:build/build.dart';
+import 'package:source_gen/source_gen.dart';
+
 import 'reflection.dart';
 
 List<StringBuffer> mainBuffer = [];

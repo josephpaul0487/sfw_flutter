@@ -211,15 +211,19 @@ packages:
     dependency: "direct main"
     description:
       path: sfw_generator
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "144c3bc64d037d280e531a2f2751b880a83ece40"
+      url: "git://github.com/josephpaul0487/sfw_flutter.git"
+    source: git
     version: "0.0.1"
   sfw_imports:
     dependency: transitive
     description:
       path: sfw_imports
-      relative: true
-    source: path
+      ref: HEAD
+      resolved-ref: "144c3bc64d037d280e531a2f2751b880a83ece40"
+      url: "git://github.com/josephpaul0487/sfw_flutter.git"
+    source: git
     version: "0.0.1"
   sky_engine:
     dependency: transitive

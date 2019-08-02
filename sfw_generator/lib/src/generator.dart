@@ -1,13 +1,13 @@
 import 'dart:async';
+
+import 'package:analyzer/dart/constant/value.dart' show DartObject;
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
+import 'package:sfw_imports/sfw_imports.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
 
-import 'package:sfw_imports/sfw_imports.dart';
-import 'package:dio/dio.dart';
 import 'entity.dart' as entityGenerator;
-import 'package:analyzer/dart/constant/value.dart' show DartObject;
 
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
