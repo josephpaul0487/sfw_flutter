@@ -521,13 +521,13 @@ class DbGenerator extends Generator {
   }
 
   Future loadAssets(StringBuffer s,BuildStep buildStep) async {
-    await writeAsset(s, AssetId("sfw_generator", "lib/src/animation_helper.d"), buildStep);
-    await writeAsset(s, AssetId("sfw_generator", "lib/src/app_helper.d"), buildStep);
-    await writeAsset(s, AssetId("sfw_generator", "lib/src/error_remover.d"), buildStep);
-    await writeAsset(s, AssetId("sfw_generator", "lib/src/sfw_ui.d"), buildStep);
+    s.writeln(await readAsset(AssetId("sfw_generator", "lib/src/animation_helper.d"), buildStep));
+    s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/app_helper.d"), buildStep));
+        s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/error_remover.d"), buildStep));
+    s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/sfw_ui.d"), buildStep));
   }
 
-  Future<String> writeAsset(StringBuffer s,AssetId assetId,BuildStep buildStep) async {
+  Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
     try {
       return await buildStep.readAsString(assetId);
     } catch(e){
