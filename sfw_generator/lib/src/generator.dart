@@ -517,6 +517,7 @@ class DbGenerator extends Generator {
   }
 
   void loadAssets(StringBuffer s,BuildStep buildStep) async {
+    s.writeln("String ddddd='ffertertetet';");
     String str= await buildStep.readAsString(AssetId("sfw_generator", "test.txt"));
     s.writeln("String ssss='$str';");
 //    DefaultAssetBundle bundle=DefaultAssetBundle.of(context);
