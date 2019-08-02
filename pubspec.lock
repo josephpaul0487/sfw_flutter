@@ -97,11 +97,25 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_screenutil:
+    dependency: transitive
+    description:
+      name: flutter_screenutil
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.3"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: transitive
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   front_end:
     dependency: transitive
     description:
@@ -123,6 +137,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.8"
   kernel:
     dependency: transitive
     description:
@@ -190,19 +211,15 @@ packages:
     dependency: "direct main"
     description:
       path: sfw_generator
-      ref: HEAD
-      resolved-ref: "9b00ad20f6ea927f689491ea39fb18acdedbb731"
-      url: "git://github.com/josephpaul0487/sfw_flutter.git"
-    source: git
+      relative: true
+    source: path
     version: "0.0.1"
   sfw_imports:
     dependency: transitive
     description:
       path: sfw_imports
-      ref: HEAD
-      resolved-ref: "9b00ad20f6ea927f689491ea39fb18acdedbb731"
-      url: "git://github.com/josephpaul0487/sfw_flutter.git"
-    source: git
+      relative: true
+    source: path
     version: "0.0.1"
   sky_engine:
     dependency: transitive

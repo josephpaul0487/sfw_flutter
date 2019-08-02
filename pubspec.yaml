@@ -9,9 +9,7 @@ environment:
 
 dependencies:
   sfw_generator:
-    git:
-      url: git://github.com/josephpaul0487/sfw_flutter.git
-      path: sfw_generator
+    path: sfw_generator
   flutter:
     sdk: flutter
 
