@@ -165,7 +165,7 @@ class DbGenerator extends Generator {
         s.writeln(entityGenerator.error);
       }
 
-     // loadAssets(s);
+      loadAssets(s,buildStep);
 
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
