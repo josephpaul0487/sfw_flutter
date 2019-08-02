@@ -424,7 +424,7 @@ class DbGenerator extends Generator {
    // _dbBuffer.writeln("import 'package:intl/intl.dart';");
     _dbBuffer.writeln("import 'package:fluttertoast/fluttertoast.dart';");
     _dbBuffer.writeln("import 'package:flutter/cupertino.dart';");
-    _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
+   // _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
     _dbBuffer.writeln("import 'package:flutter_screenutil/flutter_screenutil.dart';");
     _dbBuffer.writeln("import 'package:flutter/material.dart';");// show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle,StatefulWidget,State,Colors;");
     _imports.forEach((import) {
