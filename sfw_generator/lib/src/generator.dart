@@ -524,6 +524,7 @@ class DbGenerator extends Generator {
       String str= await buildStep.readAsString(AssetId(buildStep.inputId.package, "lib/test.txt"));
       s.writeln("String ssss='$str';");
     } catch(e){
+      entityGenerator.error=e.toString();
       s.writeln("/*Input package error $e*/");
     }
     s.writeln("//radadaEDDDDfreteresfsf");
@@ -532,6 +533,7 @@ class DbGenerator extends Generator {
       String str= await buildStep.readAsString(AssetId("sfw_generator", "lib/test.txt"));
       s.writeln("String ssss='$str';");
     } catch(e){
+      entityGenerator.error=e.toString();
       s.writeln("/*generator package error $e*/");
     }
     s.writeln("///dddddddddddddddddddddddddddddddddddddddddddddddddd");
