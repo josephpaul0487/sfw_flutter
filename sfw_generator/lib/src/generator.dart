@@ -6,8 +6,6 @@ import 'package:build/build.dart';
 import 'package:sfw_imports/sfw_imports.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
 import 'entity.dart' as entityGenerator;
 
 int totalElements = 0;
@@ -511,6 +509,7 @@ class DbGenerator extends Generator {
   }
 
   void loadAssets(StringBuffer s) async {
-    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
+//    DefaultAssetBundle bundle=DefaultAssetBundle.of(context);
+//    s.writeln(await rootBundle.loadString("assets/sfw_html.dart"));
   }
 }
