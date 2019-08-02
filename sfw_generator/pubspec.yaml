@@ -12,7 +12,9 @@ dependencies:
   source_gen: ^0.9.4+3
   dio: 2.1.13
   sfw_imports:
-    path: ../sfw_imports
+    git:
+      url: git://github.com/josephpaul0487/sfw_flutter.git
+      path: sfw_imports
   flutter:
     sdk: flutter
 

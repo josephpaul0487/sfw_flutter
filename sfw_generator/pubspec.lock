@@ -378,9 +378,11 @@ packages:
   sfw_imports:
     dependency: "direct main"
     description:
-      path: "..\\sfw_imports"
-      relative: true
-    source: path
+      path: sfw_imports
+      ref: HEAD
+      resolved-ref: "260c28ed7addf3b9fdf9067b5295fbfe685c4dfa"
+      url: "git://github.com/josephpaul0487/sfw_flutter.git"
+    source: git
     version: "0.0.1"
   shelf:
     dependency: transitive
@@ -526,7 +528,7 @@ packages:
       name: vm_service_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.6+2"
+    version: "0.2.6+3"
   watcher:
     dependency: transitive
     description:
