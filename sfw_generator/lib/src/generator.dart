@@ -30,7 +30,7 @@ class DbGenerator extends Generator {
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
         entityGenerator.EntitiesGenerator();
-
+    print("entity=$lastDartFileName  ${library.annotatedWith(TypeChecker.fromRuntime(SfwEntity)).length}");
     for (var annotatedElement
         in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
       entities.generateForAnnotatedElement(
@@ -58,6 +58,8 @@ class DbGenerator extends Generator {
         break;
       }
     }
+
+    print("DartLast=$lastDartFileName  ${queryBuffer.length}");
 
     if (webConfigBuffer.isEmpty) {
       for (var annotatedElement
@@ -157,7 +159,7 @@ class DbGenerator extends Generator {
         s.writeln(entityGenerator.error);
       }
 
-      loadAssets(s);
+     // loadAssets(s);
 
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
