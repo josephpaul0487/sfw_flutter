@@ -146,7 +146,7 @@ class DbGenerator extends Generator {
         }
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
-        loadAssets(queryBuffer,buildStep);
+        await loadAssets(queryBuffer,buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
       StringBuffer s = StringBuffer();
@@ -517,7 +517,7 @@ class DbGenerator extends Generator {
     _dbBuffer.writeln();
   }
 
-  void loadAssets(StringBuffer s,BuildStep buildStep) async {
+  Future loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln("String ddddd='${buildStep.inputId.package} ${buildStep.inputId.path}';");
     s.writeln("//rfreteresfsf");
     try {
