@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter_screenutil: ^0.5.2
   intl: ^0.15.2
-  fluttertoast: ^3.0.4
   flutter:
     sdk: flutter
 
