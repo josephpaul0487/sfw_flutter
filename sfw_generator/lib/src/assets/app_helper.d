@@ -83,7 +83,7 @@ class SfwHelper {
   }
 
   static String convertLocalToWebDate(String fromFormat,String date,{String toFormat="yyyy-MM-dd HH:mm:ss"}) {
-    return convertLocalToUtfDate(fromFormat,toFormat,date);
+    return convertLocalToUtcDate(fromFormat,toFormat,date);
   }
 
   static bool isDateAfter(String format,String date,String dateToCompare) {
