@@ -7,6 +7,7 @@ import 'package:source_gen/source_gen.dart';
 
 import 'reflection.dart';
 
+
 List<StringBuffer> mainBuffer = [];
 StringBuffer createStatements = StringBuffer();
 StringBuffer tablesMetaData=StringBuffer();
@@ -340,7 +341,7 @@ class _GeneratorHelper {
               getter.writeln('return JSON.json.encode(model.${e.name});');
             } else {
               String fieldName=e.name.replaceRange(0, 1, e.name.substring(0,1).toUpperCase());
-              getter.writeln('return $genericType.encode$fieldName(model.${e.name});');
+              getter.writeln('return ${element.name}.encode$fieldName(model.${e.name});');
             }
             getter.writeln('}');
             getter.writeln(' return model.${e.name};');

@@ -499,7 +499,7 @@ class DbGenerator extends Generator {
         ' String where, List<dynamic> whereArgs, String groupBy, String having,');
     _dbBuffer.write(' String orderBy, int limit, int offset}) => ');
     _dbBuffer.writeln(
-        ' _db.query(table, distinct:distinct ?? false, columns:columns, where:where, whereArgs:whereArgs,');
+        ' _db.query(table, distinct:distinct==null ? false:distinct, columns:columns, where:where, whereArgs:whereArgs,');
     _dbBuffer.write(
         ' groupBy:groupBy, having:having, orderBy:orderBy, limit:limit, offset:offset);');
     _dbBuffer.writeln();

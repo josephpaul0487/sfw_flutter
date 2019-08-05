@@ -4,7 +4,7 @@ abstract class SfwState <T extends StatefulWidget> extends State<T> {
   void setState(fn) {
     try {
       if(mounted)
-        super.setState(fn);
+        super.setState(fn==null?(){}:fn);
     } catch(e) {
       print(e);
     }

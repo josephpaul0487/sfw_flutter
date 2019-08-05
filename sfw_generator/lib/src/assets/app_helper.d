@@ -6,6 +6,9 @@ class SfwHelper {
   static double screenWidthPx;
   static double screenHeight;
   static double screenHeightPx;
+  static const String yyyy_MM_dd_HH_mm_ss_S_Z="yyyy-MM-dd HH:mm:ss.SZ";
+  static const String MM_dd_yyyy_KK_mm_ss__a="MM-dd-yyyy KK:mm:ss a";
+  static const String MM_dd_yyyy_KK_mm_ss_a="MM-dd-yyyy KK:mm:ssa";
 
   static initialize(BuildContext context) {
     if (util == null) {
@@ -62,7 +65,7 @@ class SfwHelper {
     }
   }
 
-  static String convertUtfToLocalDate(String fromFormat,String toFormat,String date) {
+  static String convertUtcToLocalDate(String fromFormat,String toFormat,String date) {
     try {
       return DateFormat(toFormat).format( DateFormat(fromFormat).parse(date));
     } on FormatException {
@@ -70,7 +73,7 @@ class SfwHelper {
     }
   }
 
-  static String convertLocalToUtfDate(String fromFormat,String toFormat,String date) {
+  static String convertLocalToUtcDate(String fromFormat,String toFormat,String date) {
     try {
       return DateFormat(toFormat).format( DateFormat(fromFormat).parse(date));
     } catch(e)  {
