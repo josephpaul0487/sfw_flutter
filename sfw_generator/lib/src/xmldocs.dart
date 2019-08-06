@@ -25,12 +25,12 @@ class XmlDocs {
               colorCode=colorCode.substring(colorCode.indexOf("/")+1);
             } else if(colorCode.split(",").length==3){
               var array=colorCode.split(",");
-              s.writeln("const MaterialColor(${fromRGBO(array[0], array[1], array[2], 1).toRadixString(16)},{");
+              colorCode="const MaterialColor(0x${fromRGBO(array[0], array[1], array[2], 1).toRadixString(16)},{";
               int j=50;
               for(double i=.1;i<=1;j+=i==.1?50:100,i+=.1) {
-                s.write("$j : ${fromRGBO(array[0], array[1], array[2], i).toRadixString(16)},");
+                colorCode+="$j : const Color(0x${fromRGBO(array[0], array[1], array[2], i).toRadixString(16)}),";
               }
-              s.writeln("});");
+              colorCode+="})";
 
 //              int value = ((((1 * 0xff ~/ 1) & 0xff) << 24) |
 //              ((int.tryParse(array[0]) & 0xff) << 16) |
