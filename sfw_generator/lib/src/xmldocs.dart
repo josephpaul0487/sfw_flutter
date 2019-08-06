@@ -16,28 +16,30 @@ class XmlDocs {
       String appColors=await readAsset(AssetId(buildStep.inputId.package, "lib/values/color.xml"), buildStep);
       if(appColors.isNotEmpty) {
         xml.XmlDocument document=xml.parse(appColors);
+        document.children.forEach((child){
+          child.children.forEach((node){
+            String colorCode=node.text;
+            if(colorCode.startsWith("#")) {
+              colorCode="0xFF${colorCode.substring(1)}";
+            } else if(colorCode.startsWith("@")) {
+              colorCode=colorCode.substring(colorCode.indexOf("/")+1);
+            } else if(colorCode.split(",").length==3){
+              var array=colorCode.split(",");
+              colorCode=createColor.replaceAll("red", array[0]).replaceAll("green", array[1]).replaceAll("blue", array[2]);
+            } else {
+              return;
+            }
+//            if(node.children.length>0) {
+//              node.children.forEach((color){
+                node.attributes.forEach((attr){
+                  s.writeln("static const Color ${attr.value} = $colorCode;");
+                });
+//              });
+//            }
 
-        document.findAllElements("color").forEach((node){
-          String colorCode=node.text;
-          if(colorCode.startsWith("#")) {
-            colorCode="0xFF${colorCode.substring(1)}";
-          } else if(colorCode.startsWith("@")) {
-            colorCode=colorCode.substring(colorCode.indexOf("/")+1);
-          } else if(colorCode.split(",").length==3){
-            var array=colorCode.split(",");
-            colorCode=createColor.replaceAll("red", array[0]).replaceAll("green", array[1]).replaceAll("blue", array[2]);
-          } else {
-            return;
-          }
-          if(node.children.length>0) {
-            node.children.forEach((color){
-              color.attributes.forEach((attr){
-                s.writeln("static const Color ${attr.value} = $colorCode;");
-              });
-            });
-          }
-
+          });
         });
+
       }
 
     } catch(e) {
