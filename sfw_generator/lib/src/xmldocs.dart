@@ -21,13 +21,16 @@ class XmlDocs {
         s.writeln('class SfwStrings {');
         xml.XmlDocument document = xml.parse(appStrings);
         StringBuffer switchStrings=StringBuffer();
+        int i=1;
         document.children.forEach((child) {
           child.children.forEach((node) {
-            String dimenCode = node.text;
-            if(dimenCode.isEmpty)
+            String string = node.text;
+            if(string.isEmpty)
               return;
-            if (dimenCode.startsWith("@")) {
-              dimenCode = dimenCode.substring(dimenCode.indexOf("/") + 1);
+            if (string.startsWith("@")) {
+              string = "get(${string.substring(string.indexOf("/") + 1)})";
+            } else {
+              string="const '$string'";
             }
             String key;
             node.attributes.forEach((attr) {
@@ -37,8 +40,8 @@ class XmlDocs {
             });
             if(key==null || key.isEmpty)
               return;
-            s.writeln("static const int $key = $dimenCode;");
-            switchStrings.writeln("case $key :return const $dimenCode;");
+            s.writeln("static const int $key = $i;");
+            switchStrings.writeln("case $key :return $string;");
 
           });
         });
@@ -46,8 +49,9 @@ class XmlDocs {
         s.writeln("switch(code) {");
         s.writeln(switchStrings);
         s.writeln("default:return '';");
-        s.writeln("}");
-        s.writeln("}");
+        s.writeln("}");//SWITCH
+        s.writeln("}");//GET
+        s.writeln("}");//CLASS
       }
 
     } catch(e) {
