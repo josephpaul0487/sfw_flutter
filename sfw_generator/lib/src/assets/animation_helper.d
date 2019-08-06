@@ -4,7 +4,7 @@ enum NavigationType {
   PUSH_NAMED,PUSH,PUSH_NAMED_REPLACE,REMOVE_NAMED_UNTIL
 }
 
-class AppAnim {
+class SfwAnim {
 
   static Future<dynamic> navigate(BuildContext ctx,String route,Object classObject,{NavigationType type=NavigationType.PUSH_NAMED,Object arguments,bool useAsync=false,RoutePredicate predicate}) async {
     if(useAsync) {
