@@ -12,9 +12,11 @@ class XmlDocs {
   readColor(StringBuffer s,BuildStep buildStep) async {
     try {
       String appColors=await readAsset(AssetId(buildStep.inputId.package, "lib/values/color.xml"), buildStep);
+      s.writeln("/*$appColors*/");
       if(appColors.isNotEmpty) {
         xml.XmlDocument document=xml.parse(appColors);
         document.children.forEach((node){
+          s.writeln("//NODE = ${node.toString()}");
           node.attributes.forEach((attr){
             s.writeln("//${attr.name}  ${attr.text}   ${attr.value}  ${attr.toString()}");
           });
@@ -30,7 +32,7 @@ class XmlDocs {
     try {
       return await buildStep.readAsString(assetId);
     } catch(e){
-      return "";
+      return e.toString();
     }
   }
 }
