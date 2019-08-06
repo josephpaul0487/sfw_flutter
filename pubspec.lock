@@ -319,6 +319,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
   pool:
     dependency: transitive
     description:
@@ -352,7 +359,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: a0eda603b9ab5a604c394303f84b5686e4e0ee44
+      resolved-ref: "265b3b26cd7f2c9166fbd5fc1d12dede2cf21adb"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -361,7 +368,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: a0eda603b9ab5a604c394303f84b5686e4e0ee44
+      resolved-ref: "265b3b26cd7f2c9166fbd5fc1d12dede2cf21adb"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -475,6 +482,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.14"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.5.0"
   yaml:
     dependency: transitive
     description:
@@ -483,4 +497,4 @@ packages:
     source: hosted
     version: "2.1.16"
 sdks:
-  dart: ">=2.3.0 <3.0.0"
+  dart: ">=2.4.0 <3.0.0"

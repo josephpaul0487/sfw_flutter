@@ -11,7 +11,7 @@ class SfwHelper {
   static const String MM_dd_yyyy_KK_mm_ss_a="MM-dd-yyyy KK:mm:ssa";
 
   static initialize(BuildContext context) {
-    if (util == null) {
+    if (util == null || util.scaleWidth<1) {
       util = ScreenUtil();
       util.init(context);
       screenHeight = ScreenUtil.screenHeightDp;
