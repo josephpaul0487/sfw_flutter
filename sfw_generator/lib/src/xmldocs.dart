@@ -16,10 +16,15 @@ class XmlDocs {
       if(appColors.isNotEmpty) {
         xml.XmlDocument document=xml.parse(appColors);
         document.children.forEach((node){
-          s.writeln("//NODE = ${node.toString()}");
-          node.attributes.forEach((attr){
-            s.writeln("//${attr.name}  ${attr.text}   ${attr.value}  ${attr.toString()}");
-          });
+          s.writeln("//NODE = ${node.text}");
+          if(node.children.length>0) {
+            node.children.forEach((color){
+              color.attributes.forEach((attr){
+                s.writeln("//${attr.name}  ${attr.text}   ${attr.value}  ${attr.toString()}");
+              });
+            });
+          }
+
         });
       }
 
