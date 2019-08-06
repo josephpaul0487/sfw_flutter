@@ -20,7 +20,7 @@ class XmlDocs {
           child.children.forEach((node){
             String colorCode=node.text;
             if(colorCode.startsWith("#")) {
-              colorCode="0xFF${colorCode.substring(1)}";
+              colorCode="Color(0xFF${colorCode.substring(1)})";
             } else if(colorCode.startsWith("@")) {
               colorCode=colorCode.substring(colorCode.indexOf("/")+1);
             } else if(colorCode.split(",").length==3){
