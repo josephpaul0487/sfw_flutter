@@ -26,6 +26,10 @@ class XmlDocs {
             } else if(colorCode.split(",").length==3){
               var array=colorCode.split(",");
               colorCode=createColor.replaceAll("red", array[0]).replaceAll("green", array[1]).replaceAll("blue", array[2]);
+            } else if(colorCode.length==6) {
+              colorCode="Color(0xFF$colorCode)";
+            } else if(colorCode.length==8) {
+              colorCode="Color(0x$colorCode)";
             } else {
               return;
             }
