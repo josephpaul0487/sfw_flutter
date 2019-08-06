@@ -7,6 +7,7 @@ import 'package:sfw_imports/sfw_imports.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
 import 'entity.dart' as entityGenerator;
+import 'xmldocs.dart';
 
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
@@ -125,9 +126,9 @@ class DbGenerator extends Generator {
         });
 
 
-        _dbBuffer.writeln("//FUNCTIONS DEFENITION");
+        _dbBuffer.writeln("//FUNCTIONS DEFINITION");
 
-        //FUNCTIONS DEFENITION
+        //FUNCTIONS DEFINITION
         if (!entityGenerator.typeDefs
             .contains('typedef IntCallBack = void Function(int value);'))
           _dbBuffer.writeln('typedef IntCallBack = void Function(int value);');
@@ -147,6 +148,7 @@ class DbGenerator extends Generator {
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
         await loadAssets(queryBuffer,buildStep);
+        await XmlDocs().build(queryBuffer, buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
       StringBuffer s = StringBuffer();

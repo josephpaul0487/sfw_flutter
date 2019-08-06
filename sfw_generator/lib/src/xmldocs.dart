@@ -1,20 +1,34 @@
 import 'package:build/build.dart';
-//import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart' as xml;
 class XmlDocs {
 
-  Future<String> build(StringBuffer s,BuildStep buildStep) async {
+  build(StringBuffer s,BuildStep buildStep) async {
     try {
-       String appStyles=await readAsset(buildStep.inputId, buildStep);
+       readColor(s,buildStep);
 
     } catch(e) {}
-    return "";
+  }
+
+  readColor(StringBuffer s,BuildStep buildStep) async {
+    try {
+      String appColors=await readAsset(AssetId(buildStep.inputId.package, "lib/values/color.xml"), buildStep);
+      if(appColors.isNotEmpty) {
+        xml.XmlDocument document=xml.parse(appColors);
+        document.children.forEach((node){
+          node.attributes.forEach((attr){
+            s.writeln("//${attr.name}  ${attr.text}   ${attr.value}  ${attr.toString()}");
+          });
+        });
+      }
+
+    } catch(e) {}
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
     try {
       return await buildStep.readAsString(assetId);
     } catch(e){
-      return e.toString();
+      return "";
     }
   }
 }
