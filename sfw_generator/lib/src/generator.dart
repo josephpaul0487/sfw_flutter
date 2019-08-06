@@ -148,6 +148,7 @@ class DbGenerator extends Generator {
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
         await loadAssets(queryBuffer,buildStep);
+        queryBuffer.writeln('//COLORS');
         await XmlDocs().build(queryBuffer, buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }

@@ -4,7 +4,7 @@ class XmlDocs {
 
   build(StringBuffer s,BuildStep buildStep) async {
     try {
-       readColor(s,buildStep);
+       await readColor(s,buildStep);
 
     } catch(e) {}
   }
@@ -21,7 +21,9 @@ class XmlDocs {
         });
       }
 
-    } catch(e) {}
+    } catch(e) {
+      s.writeln("//${e.toString()}");
+    }
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
