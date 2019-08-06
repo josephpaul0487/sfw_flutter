@@ -30,7 +30,7 @@ class XmlDocs {
             if (string.startsWith("@")) {
               string = "get(${string.substring(string.indexOf("/") + 1)})";
             } else {
-              string="const '$string'";
+              string=" '$string'";
             }
             String key;
             node.attributes.forEach((attr) {
