@@ -19,6 +19,8 @@ StringBuffer webQueryBuffer = StringBuffer();
 StringBuffer webConfigBuffer = StringBuffer();
 int filesFinished=0;
 int totalFileCount=-1;
+String dbName ;
+int dbVersion ;
 
 //flutter packages pub run build_runner clean
 //flutter packages pub run build_runner build
@@ -109,6 +111,12 @@ class DbGenerator extends Generator {
         totalFileCount==filesFinished) {
       if (entityGenerator.error == null) {
         _dbBuffer.write(entityGenerator.createStatements);
+        entityGenerator.createStatements.writeln(
+            "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
+        entityGenerator.createStatements.writeln(
+            "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
+        createDb(_dbBuffer, buildStep, dbVersion, dbName, entityGenerator.createStatements.toString());
+        /*_dbBuffer.write(entityGenerator.createStatements);
         _dbBuffer.writeln(
             "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
         _dbBuffer.writeln(
@@ -119,8 +127,8 @@ class DbGenerator extends Generator {
 
         _dbBuffer.writeln('});');
         _dbBuffer.writeln('}');
-        _writeSqlFunctions();
-        _dbBuffer.writeln('}');
+//        _writeSqlFunctions();
+        _dbBuffer.writeln('}');*/
         _mainBuffer.forEach((buffer) {
           _dbBuffer.write(buffer);
         });
@@ -413,8 +421,9 @@ class DbGenerator extends Generator {
       }
     }
 
-    String dbName = annotation.read('dbName').stringValue;
-    int dbVersion = annotation.read('version').intValue;
+    dbName = annotation.read('dbName').stringValue;
+    dbVersion = annotation.read('version').intValue;
+    if (!dbName.toLowerCase().endsWith(".db")) dbName += ".db";
     //final _builder = StringBuffer();
 
     // _dbBuffer.writeln("import 'package:path_provider/path_provider.dart';");
@@ -434,7 +443,7 @@ class DbGenerator extends Generator {
     });
 
     //DATABASE
-    _dbBuffer.writeln('class DBProvider {');
+    /*_dbBuffer.writeln('class DBProvider {');
     _dbBuffer.writeln("static Database _db;");
     _dbBuffer.writeln("static DBProvider _provider;");
     _dbBuffer
@@ -463,13 +472,13 @@ class DbGenerator extends Generator {
     _dbBuffer.writeln(
         "return await openDatabase(path, version: $dbVersion, onOpen: (db) {},");
     _dbBuffer.writeln("onCreate: (Database db, int version) async {");
-    _dbBuffer.writeln("Batch _batch=db.batch();");
+    _dbBuffer.writeln("Batch _batch=db.batch();");*/
 //    _dbBuffer.writeln("await db.transaction((transaction) async  {");
 
     return methodBuilder.toString();
   }
 
-  void _writeSqlFunctions() {
+  /*void _writeSqlFunctions() {
     _dbBuffer.writeln();
     _dbBuffer.writeln('Batch getBatch() => _db.batch();');
     _dbBuffer.writeln(
@@ -521,7 +530,7 @@ class DbGenerator extends Generator {
     _dbBuffer.writeln(
         '_db.update(table,values,where:where,whereArgs:whereArgs,conflictAlgorithm:conflictAlgorithm);');
     _dbBuffer.writeln();
-  }
+  }*/
 
   Future loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln(await readAsset(AssetId("sfw_generator", "lib/src/assets/animation_helper.d"), buildStep));
@@ -529,6 +538,12 @@ class DbGenerator extends Generator {
         s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/error_remover.d"), buildStep));
     s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
     s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_html.d"), buildStep));
+
+  }
+  Future createDb(StringBuffer s,BuildStep buildStep,int dbVersion,String dbName,String dbTransaction) async {
+    String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
+    db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
+    s.writeln(db);
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
