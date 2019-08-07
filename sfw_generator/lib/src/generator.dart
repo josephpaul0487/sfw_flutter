@@ -110,7 +110,7 @@ class DbGenerator extends Generator {
     if (totalFileCount>-1 &&
         totalFileCount==filesFinished) {
       if (entityGenerator.error == null) {
-        _dbBuffer.write(entityGenerator.createStatements);
+        //_dbBuffer.write(entityGenerator.createStatements);
         entityGenerator.createStatements.writeln(
             "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
         entityGenerator.createStatements.writeln(
