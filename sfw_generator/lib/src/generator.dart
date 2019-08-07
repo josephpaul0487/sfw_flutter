@@ -104,9 +104,6 @@ class DbGenerator extends Generator {
       _generateWebCall(
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }
-
-//    if (lastDartFileName == library.element.source.shortName ||
-//        "$lastDartFileName.dart" == library.element.source.shortName) {
     if (totalFileCount>-1 &&
         totalFileCount==filesFinished) {
       if (entityGenerator.error == null) {
@@ -116,23 +113,10 @@ class DbGenerator extends Generator {
         entityGenerator.createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
         entityGenerator.tablesMetaData.forEach((map){
-          entityGenerator.createStatements.writeln("_batch.insert(sfwMeta, {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
+          entityGenerator.createStatements.writeln("_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
         });
-//        _dbBuffer.writeln("_batch.rawQuery('INSERT INTO TABLE sfwMeta(sfwKey,sfwValue,createdAt,updatedAt) VALUES ${entityGenerator.tablesMetaData.toString()}',${entityGenerator.tablesMetaDataArgs});");
         createDb(_dbBuffer, buildStep, dbVersion, dbName, entityGenerator.createStatements.toString());
-        /*_dbBuffer.write(entityGenerator.createStatements);
-        _dbBuffer.writeln(
-            "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
-        _dbBuffer.writeln(
-            "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
-        //_dbBuffer.writeln("_batch.rawQuery('INSERT INTO TABLE sfwMeta(sfwKey,sfwValue,createdAt,updatedAt) VALUES ${entityGenerator.tablesMetaData.toString()}',${entityGenerator.tablesMetaDataArgs});");
-//        _dbBuffer.writeln('});');
-        _dbBuffer.writeln('await _batch.commit(noResult: true);');
 
-        _dbBuffer.writeln('});');
-        _dbBuffer.writeln('}');
-//        _writeSqlFunctions();
-        _dbBuffer.writeln('}');*/
         _mainBuffer.forEach((buffer) {
           _dbBuffer.write(buffer);
         });
@@ -445,96 +429,8 @@ class DbGenerator extends Generator {
     _imports.forEach((import) {
       _dbBuffer.writeln(import);
     });
-
-    //DATABASE
-    /*_dbBuffer.writeln('class DBProvider {');
-    _dbBuffer.writeln("static Database _db;");
-    _dbBuffer.writeln("static DBProvider _provider;");
-    _dbBuffer
-        .writeln("static DBProvider getInstance({VoidCallback callback}){");
-    _dbBuffer.writeln(
-        "if (_provider == null) _provider = DBProvider(callback: callback);");
-    _dbBuffer.writeln("if(callback!=null && _db!=null)");
-    _dbBuffer.writeln("callback();");
-    _dbBuffer.writeln("return _provider;");
-    _dbBuffer.writeln("}");
-    _dbBuffer.writeln("DBProvider({VoidCallback callback}) {");
-    _dbBuffer.writeln("if(callback!=null)");
-    _dbBuffer.writeln(" _initDataBase().then((value) {");
-    _dbBuffer.writeln("callback();");
-    _dbBuffer.writeln("});");
-    _dbBuffer.writeln("else");
-    _dbBuffer.writeln("_initDataBase();");
-    _dbBuffer.writeln("}");
-    _dbBuffer.writeln("_initDataBase() async {");
-    _dbBuffer.writeln("if (_db == null) _db = await _initDB();");
-    _dbBuffer.writeln("}");
-    _dbBuffer.writeln("_initDB() async {");
-    _dbBuffer.writeln("String dbFolder = await getDatabasesPath();");
-    if (!dbName.toLowerCase().endsWith(".db")) dbName += ".db";
-    _dbBuffer.writeln("String path = join(dbFolder,'$dbName');");
-    _dbBuffer.writeln(
-        "return await openDatabase(path, version: $dbVersion, onOpen: (db) {},");
-    _dbBuffer.writeln("onCreate: (Database db, int version) async {");
-    _dbBuffer.writeln("Batch _batch=db.batch();");*/
-//    _dbBuffer.writeln("await db.transaction((transaction) async  {");
-
     return methodBuilder.toString();
   }
-
-  /*void _writeSqlFunctions() {
-    _dbBuffer.writeln();
-    _dbBuffer.writeln('Batch getBatch() => _db.batch();');
-    _dbBuffer.writeln(
-        'Future<int> rawDelete(String sql, [List<dynamic> arguments]) =>');
-    _dbBuffer.writeln('_db.rawDelete(sql,arguments);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<int> delete(String table, {String where, List<dynamic> whereArgs}) =>');
-    _dbBuffer.writeln('_db.delete(table,where:where,whereArgs:whereArgs);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<void> execute(String sql, [List<dynamic> arguments]) => ');
-    _dbBuffer.writeln('_db.execute(sql,arguments);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<int> rawInsert(String sql, [List<dynamic> arguments]) => ');
-    _dbBuffer.writeln('_db.rawInsert(sql,arguments);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<int> insert(String table, Map<String, dynamic> values,');
-    _dbBuffer.write(
-        '{String nullColumnHack, ConflictAlgorithm conflictAlgorithm}) => ');
-    _dbBuffer.writeln(
-        '_db.insert(table,values,nullColumnHack:nullColumnHack,conflictAlgorithm:conflictAlgorithm);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<List<Map<String, dynamic>>> query(String table,{bool distinct = false,List<String> columns,');
-    _dbBuffer.write(
-        ' String where, List<dynamic> whereArgs, String groupBy, String having,');
-    _dbBuffer.write(' String orderBy, int limit, int offset}) => ');
-    _dbBuffer.writeln(
-        ' _db.query(table, distinct:distinct==null ? false:distinct, columns:columns, where:where, whereArgs:whereArgs,');
-    _dbBuffer.write(
-        ' groupBy:groupBy, having:having, orderBy:orderBy, limit:limit, offset:offset);');
-    _dbBuffer.writeln();
-    _dbBuffer.write(
-        ' Future<List<Map<String, dynamic>>> rawQuery(String sql, [List<dynamic> arguments]) => ');
-    _dbBuffer.writeln('_db.rawQuery(sql,arguments);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<int> rawUpdate(String sql, [List<dynamic> arguments]) => ');
-    _dbBuffer.writeln('_db.rawUpdate(sql,arguments);');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        'Future<int> update(String table, Map<String, dynamic> values,');
-    _dbBuffer.write(
-        '{String where, List<dynamic> whereArgs, ConflictAlgorithm conflictAlgorithm}) => ');
-    _dbBuffer.writeln();
-    _dbBuffer.writeln(
-        '_db.update(table,values,where:where,whereArgs:whereArgs,conflictAlgorithm:conflictAlgorithm);');
-    _dbBuffer.writeln();
-  }*/
 
   Future loadAssets(StringBuffer s,BuildStep buildStep) async {
     s.writeln(await readAsset(AssetId("sfw_generator", "lib/src/assets/animation_helper.d"), buildStep));
