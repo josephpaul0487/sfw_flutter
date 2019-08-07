@@ -10,8 +10,8 @@ import 'reflection.dart';
 
 List<StringBuffer> mainBuffer = [];
 StringBuffer createStatements = StringBuffer();
-StringBuffer tablesMetaData=StringBuffer();
-List<dynamic> tablesMetaDataArgs=[];
+//StringBuffer tablesMetaData=StringBuffer();
+List<String> tablesMetaData=[];
 StringBuffer dbFunctions = StringBuffer();
 Set<String> imports = {};
 List<String> typeDefs = [];
@@ -365,11 +365,12 @@ class _GeneratorHelper {
       }
       createStatements.writeln(
           "_batch.execute('CREATE TABLE IF NOT EXISTS ${element.name} (id INTEGER PRIMARY KEY,${fields.toString()})');");
-      if(tablesMetaData.length>0)
-        tablesMetaData.write(",");
-      tablesMetaData.write("(?,?)");
-      tablesMetaDataArgs.add('"${element.name}"');
-      tablesMetaDataArgs.add('"id INTEGER PRIMARY KEY,${fields.toString()}"');
+//      if(tablesMetaData.length>0)
+//        tablesMetaData.write(",");
+      tablesMetaData.add('"sfwKey":"${element.name}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
+//      tablesMetaData.write("(?,?)");
+//      tablesMetaDataArgs.add('"${element.name}"');
+//      tablesMetaDataArgs.add('"id INTEGER PRIMARY KEY,${fields.toString()}"');
 
 //      createStatements.writeln(
 //          "await transaction.execute('CREATE TABLE IF NOT EXISTS ${element.name} (id INTEGER PRIMARY KEY,${fields.toString()})');");
@@ -386,13 +387,14 @@ class _GeneratorHelper {
 //            "await transaction.execute('CREATE TABLE IF NOT EXISTS ${dart.toStringValue()} (id INTEGER PRIMARY KEY,${fields.toString()})');");
         createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS ${dart.toStringValue()} (id INTEGER PRIMARY KEY,${fields.toString()})');");
-        if(tablesMetaData.length>0)
+        /*if(tablesMetaData.length>0)
           tablesMetaData.write(",");
         tablesMetaData.write("(?,?,?,?)");
         tablesMetaDataArgs.add('"${dart.toStringValue()}"');
         tablesMetaDataArgs.add('"id INTEGER PRIMARY KEY,${fields.toString()}"');
         tablesMetaDataArgs.add('createdAt');
-        tablesMetaDataArgs.add('createdAt');
+        tablesMetaDataArgs.add('createdAt');*/
+        tablesMetaData.add('"sfwKey":"${dart.toStringValue()}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
       });
     }
     //END OF CREATE TABLES

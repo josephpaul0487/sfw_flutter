@@ -115,6 +115,10 @@ class DbGenerator extends Generator {
             "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
         entityGenerator.createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
+        entityGenerator.tablesMetaData.forEach((map){
+          entityGenerator.createStatements.writeln("_batch.insert(sfwMeta, {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
+        });
+//        _dbBuffer.writeln("_batch.rawQuery('INSERT INTO TABLE sfwMeta(sfwKey,sfwValue,createdAt,updatedAt) VALUES ${entityGenerator.tablesMetaData.toString()}',${entityGenerator.tablesMetaDataArgs});");
         createDb(_dbBuffer, buildStep, dbVersion, dbName, entityGenerator.createStatements.toString());
         /*_dbBuffer.write(entityGenerator.createStatements);
         _dbBuffer.writeln(

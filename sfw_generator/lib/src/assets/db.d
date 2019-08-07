@@ -25,6 +25,7 @@ class DBProvider {
     return await openDatabase(path, version: dbVersion, onOpen: (db) {},
         onCreate: (Database db, int version) async {
           Batch _batch = db.batch();
+          Batch _batchInsert = db.batch();
           dbTransaction
           await _batch.commit(noResult: true);
         });
