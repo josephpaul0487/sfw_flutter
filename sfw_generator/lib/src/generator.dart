@@ -8,6 +8,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
 import 'entity.dart' as entityGenerator;
 import 'xmldocs.dart';
+import 'package:glob/glob.dart';
 
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
@@ -439,11 +440,16 @@ class DbGenerator extends Generator {
     s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
     s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_html.d"), buildStep));
 
+
   }
   Future createDb(StringBuffer s,BuildStep buildStep,int dbVersion,String dbName,String dbTransaction) async {
     String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
+    Stream<AssetId> assets=buildStep.findAssets(Glob("/^string.*\$/"));
+    assets.forEach((asset){
+      s.writeln("//${asset.toString()}");
+    });
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
