@@ -448,8 +448,10 @@ class DbGenerator extends Generator {
     s.writeln(db);
     s.writeln("//FIND ASSETS");
     Stream<AssetId> assets=buildStep.findAssets(Glob("[abc]",recursive:false,caseSensitive:false));
-    s.writeln("//COUNT = ${assets.length}");
-    assets.forEach((asset){
+
+    List<AssetId> assetIds=await assets.toList();
+    s.writeln("//COUNT = ${assetIds.length}");
+    assetIds.forEach((asset){
       s.writeln("//${asset.toString()}");
     });
     s.writeln("//FIND ASSETS FINISHED");
