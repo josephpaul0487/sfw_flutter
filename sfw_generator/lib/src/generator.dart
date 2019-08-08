@@ -451,7 +451,17 @@ class DbGenerator extends Generator {
      Resource(() =>  ScratchSpace(), dispose: (old) => old.delete());
     var scratchSpace = await buildStep.fetchResource(myScratchSpaceResource);
     s.writeln("//Scratch package=${scratchSpace.packagesDir}  temp=${scratchSpace.tempDir}" );
-    scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "sfw.${buildStep.inputId.path}"), buildStep);
+    try {
+      scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "sfw.${buildStep.inputId.path.replaceAll("/", "")}"), buildStep);
+    } catch(e){
+      s.writeln("/*${e.toString()} */");
+    }
+    try {
+      scratchSpace.fileFor(AssetId(buildStep.inputId.package, "sfwtest.dart")).writeAsStringSync("j,xnkkcsjkcs");
+    } catch(e){
+      s.writeln("/*${e.toString()} */");
+    }
+
     s.writeln("//Scrach end");
   }
 
