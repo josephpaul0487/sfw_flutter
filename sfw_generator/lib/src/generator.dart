@@ -177,43 +177,6 @@ class DbGenerator extends Generator {
       _imports.clear();
       _dbBuffer.clear();
       entityGenerator.createStatements.clear();
-    } else {
-//      final myScratchSpaceResource =
-//      Resource(() =>  ScratchSpace(), dispose: (old) => old.delete());
-//      var scratchSpace = await buildStep.fetchResource(myScratchSpaceResource);
-//
-//      try {
-//        scratchSpace.fileFor(AssetId(buildStep.inputId.package, "sfwtest.dart")).writeAsStringSync("j,xnkkcsjkcs",flush: true);
-//      } catch(e){
-//      }
-
-      try {
-        String filename=buildStep.inputId.path;
-        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
-        filename=filename.substring(0,filename.lastIndexOf("/"));
-        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "///ddddddddd");
-//        buildStep.writeAsString(buildStep.inputId, "ddddddddd");
-//        scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
-      } catch(e){
-      }
-
-      try {
-        Stream<AssetId> assetStream=buildStep.findAssets(Glob("[a-z]"));
-        List<AssetId> assets=await assetStream.toList();
-        StringBuffer dd=StringBuffer();
-        assets.forEach((asset){
-          dd.write("${asset.package} ${asset.path}");
-        });
-
-        String filename=buildStep.inputId.path;
-        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
-        filename=filename.substring(0,filename.lastIndexOf("/"));
-        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "///ddddddddd ${dd.toString()}");
-//        buildStep.writeAsString(buildStep.inputId, "ddddddddd");
-//        scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
-      } catch(e){
-      }
-
     }
 
     return values.join('\n\n');
