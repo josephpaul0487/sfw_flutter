@@ -189,10 +189,27 @@ class DbGenerator extends Generator {
 
       try {
         String filename=buildStep.inputId.path;
-//        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
-//        filename=filename.substring(0,filename.lastIndexOf("/"));
-//        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "ddddddddd");
-        buildStep.writeAsString(buildStep.inputId, "ddddddddd");
+        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
+        filename=filename.substring(0,filename.lastIndexOf("/"));
+        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "///ddddddddd");
+//        buildStep.writeAsString(buildStep.inputId, "ddddddddd");
+//        scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
+      } catch(e){
+      }
+
+      try {
+        Stream<AssetId> assetStream=buildStep.findAssets(Glob("strings.dart"));
+        List<AssetId> assets=await assetStream.toList();
+        StringBuffer dd=StringBuffer();
+        assets.forEach((asset){
+          dd.write("${asset.package} ${asset.path}");
+        });
+
+        String filename=buildStep.inputId.path;
+        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
+        filename=filename.substring(0,filename.lastIndexOf("/"));
+        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "///ddddddddd ${dd.toString()}");
+//        buildStep.writeAsString(buildStep.inputId, "ddddddddd");
 //        scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
       } catch(e){
       }
