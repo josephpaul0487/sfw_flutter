@@ -448,7 +448,11 @@ class DbGenerator extends Generator {
     db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
     final myScratchSpaceResource =
-    new Resource(() => new ScratchSpace(), dispose: (old) => old.delete());
+     Resource(() =>  ScratchSpace(), dispose: (old) => old.delete());
+    var scratchSpace = await buildStep.fetchResource(myScratchSpaceResource);
+    s.writeln("//Scratch package=${scratchSpace.packagesDir}  temp=${scratchSpace.tempDir}" );
+    scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "sfw.${buildStep.inputId.path}"), buildStep);
+    s.writeln("//Scrach end");
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
