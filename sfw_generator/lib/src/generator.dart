@@ -446,10 +446,13 @@ class DbGenerator extends Generator {
     String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
-    Stream<AssetId> assets=buildStep.findAssets(Glob("/^string.*\$/"));
+    s.writeln("//FIND ASSETS");
+    Stream<AssetId> assets=buildStep.findAssets(Glob("[abc]",recursive:false,caseSensitive:false));
+    s.writeln("//COUNT = ${assets.length}");
     assets.forEach((asset){
       s.writeln("//${asset.toString()}");
     });
+    s.writeln("//FIND ASSETS FINISHED");
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
