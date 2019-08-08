@@ -177,6 +177,25 @@ class DbGenerator extends Generator {
       _imports.clear();
       _dbBuffer.clear();
       entityGenerator.createStatements.clear();
+    } else {
+      final myScratchSpaceResource =
+      Resource(() =>  ScratchSpace(), dispose: (old) => old.delete());
+      var scratchSpace = await buildStep.fetchResource(myScratchSpaceResource);
+
+      try {
+        scratchSpace.fileFor(AssetId(buildStep.inputId.package, "sfwtest.dart")).writeAsStringSync("j,xnkkcsjkcs",flush: true);
+      } catch(e){
+      }
+
+      try {
+        String filename=buildStep.inputId.path;
+        String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
+        filename=filename.substring(0,filename.lastIndexOf("/"));
+        buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "ddddddddd");
+        scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
+      } catch(e){
+      }
+
     }
 
     return values.join('\n\n');
@@ -447,28 +466,6 @@ class DbGenerator extends Generator {
     String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
-    final myScratchSpaceResource =
-     Resource(() =>  ScratchSpace(), dispose: (old) => old.delete());
-    var scratchSpace = await buildStep.fetchResource(myScratchSpaceResource);
-    s.writeln("//Scratch package=${scratchSpace.packagesDir}  temp=${scratchSpace.tempDir}" );
-
-    try {
-      scratchSpace.fileFor(AssetId(buildStep.inputId.package, "sfwtest.dart")).writeAsStringSync("j,xnkkcsjkcs",flush: true);
-    } catch(e){
-      s.writeln("/*${e.toString()} */");
-    }
-
-    try {
-      String filename=buildStep.inputId.path;
-      String file=filename.substring(filename.lastIndexOf("/")+1).replaceAll(".dart", "")+".sfw.dart";
-      filename=filename.substring(0,filename.lastIndexOf("/"));
-      buildStep.writeAsString(AssetId(buildStep.inputId.package, "$filename/$file"), "ddddddddd");
-      scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "$filename/$file"), buildStep);
-    } catch(e){
-      s.writeln("/*${e.toString()} */");
-    }
-
-    s.writeln("//Scrach end");
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
