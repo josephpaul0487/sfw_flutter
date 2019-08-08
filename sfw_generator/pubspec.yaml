@@ -12,6 +12,7 @@ dependencies:
   source_gen: ^0.9.4+3
   dio: 2.1.13
   xml: ^3.5.0
+  scratch_space: ^0.0.4
   sfw_imports:
     git:
       url: git://github.com/josephpaul0487/sfw_flutter.git

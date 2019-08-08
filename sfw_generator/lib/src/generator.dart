@@ -9,6 +9,7 @@ import 'package:source_gen/src/output_helpers.dart';
 import 'entity.dart' as entityGenerator;
 import 'xmldocs.dart';
 import 'package:glob/glob.dart';
+import 'package:scratch_space/scratch_space.dart';
 
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
@@ -446,15 +447,8 @@ class DbGenerator extends Generator {
     String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
-    s.writeln("//FIND ASSETS");
-    Stream<AssetId> assets=buildStep.findAssets(Glob("[abc]",recursive:false,caseSensitive:false));
-
-    List<AssetId> assetIds=await assets.toList();
-    s.writeln("//COUNT = ${assetIds.length}");
-    assetIds.forEach((asset){
-      s.writeln("//${asset.toString()}");
-    });
-    s.writeln("//FIND ASSETS FINISHED");
+    final myScratchSpaceResource =
+    new Resource(() => new ScratchSpace(), dispose: (old) => old.delete());
   }
 
   Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
