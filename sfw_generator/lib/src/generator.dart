@@ -198,7 +198,7 @@ class DbGenerator extends Generator {
       }
 
       try {
-        Stream<AssetId> assetStream=buildStep.findAssets(Glob("strings.dart"));
+        Stream<AssetId> assetStream=buildStep.findAssets(Glob("[a-z]"));
         List<AssetId> assets=await assetStream.toList();
         StringBuffer dd=StringBuffer();
         assets.forEach((asset){
