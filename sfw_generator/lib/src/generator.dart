@@ -462,8 +462,8 @@ class DbGenerator extends Generator {
       String filename=buildStep.inputId.path;
       String file=filename.substring(filename.lastIndexOf("/")+1);
       filename=filename.substring(0,filename.lastIndexOf("/"));
-      buildStep.writeAsString(AssetId(buildStep.inputId.package, "sfw.${filename}sfw.$file"), "ddddddddd");
-      scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "sfw.${filename}sfw.$file"), buildStep);
+      buildStep.writeAsString(AssetId(buildStep.inputId.package, "sfw.$filename/sfw.$file"), "ddddddddd");
+      scratchSpace.copyOutput(AssetId(buildStep.inputId.package, "sfw.$filename/sfw.$file"), buildStep);
     } catch(e){
       s.writeln("/*${e.toString()} */");
     }
