@@ -2,8 +2,9 @@
 class SfwEntity {
   final List<String> tables;
   final bool needTableMethods;
+  final bool isAnDbEntity;
 
-  const SfwEntity(this.tables,{this.needTableMethods=false}) : assert(tables != null && needTableMethods!=null);
+  const SfwEntity(this.tables,{this.needTableMethods=false,this.isAnDbEntity=true}) : assert(tables != null && needTableMethods!=null);
 }
 
 class SfwDbConfig {

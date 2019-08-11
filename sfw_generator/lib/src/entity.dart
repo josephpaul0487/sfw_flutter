@@ -115,6 +115,7 @@ class _GeneratorHelper {
     });
 
     StringBuffer buffer = StringBuffer();
+    bool isAnDbEntity=annotation.read('isAnDbEntity').boolValue;
 
     //IMPORT
 
@@ -143,13 +144,13 @@ class _GeneratorHelper {
     //FUNCTION FOR get and set Object from and to Map
 
     buffer.writeln(
-        '    static Map<String, dynamic> toJson(${element.name} model, {List<String> columns,String table,bool toDatabase=true}) {');
+        '    static Map<String, dynamic> toJson(${element.name} model, {List<String> columns,String table,bool toDatabase=$isAnDbEntity}) {');
     buffer.writeln('if (columns == null || columns.isEmpty)');
     buffer.writeln('{');
     buffer.writeln('Map<String,dynamic> json={};');
 
     StringBuffer fromJson = StringBuffer(
-        '    static ${element.name} fromJson(Map<String, dynamic> json, {List<String> columns,bool fromDatabase=true}) {');
+        '    static ${element.name} fromJson(Map<String, dynamic> json, {List<String> columns,bool fromDatabase=$isAnDbEntity}) {');
     StringBuffer jsonToJson=StringBuffer(
         '    static Map<String,dynamic> jsonToJson(Map<String,dynamic> mapToCheck,  {List<String> columns,String table}) {');
     jsonToJson.writeln('');
@@ -213,6 +214,7 @@ class _GeneratorHelper {
       bool isList=e.type.name == "List";
       bool isMap=e.type.name == "Map";
       StringBuffer excludedTables = StringBuffer();
+
 
       //excluded tables condition
       if (excluded.length > 0) excludedTables.write('if(');
@@ -352,32 +354,48 @@ class _GeneratorHelper {
         getter.writeln('case "${e.name}": return model.${e.name};');
       i++;
     });
-    //END LOOP
 
-    if (tables.length == 0) {
-      if (reservedKeys.contains(element.name.toLowerCase())) {
-        error =
-            'Generator cannot  create table "${element.name}". This table name is reserved.  Found in  :  CLASS -> "${element.name}"  FILE -> ${element.source.fullName}';
-        throw InvalidGenerationSourceError(
-            'Generator cannot target create table "${element.name}". This table name is reserved.  Found in  :  CLASS -> "${element.name}"  FILE -> ${element.source.fullName}',
-            element: element);
-      }
-      createStatements.writeln(
-          "_batch.execute('CREATE TABLE IF NOT EXISTS ${element.name} (id INTEGER PRIMARY KEY,${fields.toString()})');");
-      tablesMetaData.add('"sfwKey":"${element.name}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
-    } else {
-      tables.forEach((dart) {
+    //END LOOP
+    if(isAnDbEntity) {
+      if (tables.length == 0) {
         if (reservedKeys.contains(element.name.toLowerCase())) {
           error =
-              'Generator cannot  create table "${dart.toStringValue()}". This table name is reserved.  Found in  :  CLASS -> "${element.name}"  FILE -> ${element.source.fullName}';
+          'Generator cannot  create table "${element
+              .name}". This table name is reserved.  Found in  :  CLASS -> "${element
+              .name}"  FILE -> ${element.source.fullName}';
           throw InvalidGenerationSourceError(
-              'Generator cannot create table "${dart.toStringValue()}". This table name is reserved.  Found in  :  CLASS -> "${element.name}"  FILE -> ${element.source.fullName}',
+              'Generator cannot target create table "${element
+                  .name}". This table name is reserved.  Found in  :  CLASS -> "${element
+                  .name}"  FILE -> ${element.source.fullName}',
               element: element);
         }
         createStatements.writeln(
-            "_batch.execute('CREATE TABLE IF NOT EXISTS ${dart.toStringValue()} (id INTEGER PRIMARY KEY,${fields.toString()})');");
-        tablesMetaData.add('"sfwKey":"${dart.toStringValue()}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
-      });
+            "_batch.execute('CREATE TABLE IF NOT EXISTS ${element
+                .name} (id INTEGER PRIMARY KEY,${fields.toString()})');");
+        tablesMetaData.add('"sfwKey":"${element
+            .name}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
+      } else {
+        tables.forEach((dart) {
+          if (reservedKeys.contains(element.name.toLowerCase())) {
+            error =
+            'Generator cannot  create table "${dart
+                .toStringValue()}". This table name is reserved.  Found in  :  CLASS -> "${element
+                .name}"  FILE -> ${element.source.fullName}';
+            throw InvalidGenerationSourceError(
+                'Generator cannot create table "${dart
+                    .toStringValue()}". This table name is reserved.  Found in  :  CLASS -> "${element
+                    .name}"  FILE -> ${element.source.fullName}',
+                element: element);
+          }
+          createStatements.writeln(
+              "_batch.execute('CREATE TABLE IF NOT EXISTS ${dart
+                  .toStringValue()} (id INTEGER PRIMARY KEY,${fields
+                  .toString()})');");
+          tablesMetaData.add('"sfwKey":"${dart
+              .toStringValue()}","sfwValue":"id INTEGER PRIMARY KEY,${fields
+              .toString()}"');
+        });
+      }
     }
     //END OF CREATE TABLES
 
@@ -413,7 +431,7 @@ class _GeneratorHelper {
     buffer.writeln(jsonToJsonList);
     buffer.writeln('');
     buffer.writeln(
-        'static List<${element.name}> fromJsonList(List<dynamic> data, {List<String> columns, bool fromDatabase = true}) {');
+        'static List<${element.name}> fromJsonList(List<dynamic> data, {List<String> columns, bool fromDatabase = $isAnDbEntity}) {');
     buffer.writeln('List<${element.name}> list=[];');
     buffer.writeln('data.forEach((g){');
     buffer.writeln('list.add(${element.name}SFW.fromJson(g as Map,fromDatabase:fromDatabase,columns:columns));');
@@ -423,7 +441,7 @@ class _GeneratorHelper {
 
     buffer.writeln('');
     buffer.writeln(
-        'static List<dynamic> toJsonList(List<${element.name}> data, {List<String> columns,bool toDatabase=true}) {');
+        'static List<dynamic> toJsonList(List<${element.name}> data, {List<String> columns,bool toDatabase=$isAnDbEntity}) {');
     buffer.writeln('List<dynamic> list=[];');
     buffer.writeln('data.forEach((g){');
     buffer.writeln('list.add(${element.name}SFW.toJson(g,columns:columns,toDatabase:toDatabase));');
@@ -448,6 +466,11 @@ class _GeneratorHelper {
 
 _createDbFunctions(
     ClassElement element, ConstantReader annotation, StringBuffer buffer) {
+
+  if(!annotation.read('isAnDbEntity').boolValue) {
+    return;
+  }
+
   List<DartObject> tables = annotation.read('tables').listValue;
   String generatedClassName = '${element.name}$CLASS_NAME_SUFFIX';
 
