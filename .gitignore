@@ -5,3 +5,10 @@
 .pub/
 
 build/
+.idea/encodings.xml
+.idea/modules.xml
+.idea/Sfw.iml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/libraries/Dart_SDK.xml
+.idea/libraries/Flutter_Plugins.xml
