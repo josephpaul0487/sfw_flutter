@@ -44,6 +44,7 @@ class XmlDocs {
             switchStrings.writeln("case $key :return $string;");
 
           });
+          ++i;
         });
         s.writeln("static String get(int code,{String locale}) {");
         s.writeln("switch(code) {");

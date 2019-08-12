@@ -36,6 +36,12 @@ class DbGenerator extends Generator {
     ++filesFinished;
     log.warning("FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
 
+    if(library.element.source.shortName=="styles.dart") {
+      StringBuffer styles=StringBuffer();
+      await XmlDocs.build(styles, buildStep);
+      buildStep.writeAsString(AssetId(buildStep.inputId.package, buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")), styles.t);
+    }
+
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
         entityGenerator.EntitiesGenerator();
@@ -146,7 +152,7 @@ class DbGenerator extends Generator {
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
         await loadAssets(queryBuffer,buildStep);
-        await XmlDocs.build(queryBuffer, buildStep);
+        //await XmlDocs.build(queryBuffer, buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
       StringBuffer s = StringBuffer();
