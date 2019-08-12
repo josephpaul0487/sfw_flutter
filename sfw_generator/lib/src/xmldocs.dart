@@ -1,34 +1,102 @@
 import 'package:build/build.dart';
+import 'package:sfw_imports/sfw_imports.dart' show SfwStyleAnnotation;
+import 'package:source_gen/source_gen.dart';
 import 'package:xml/xml.dart' as xml;
+import 'package:analyzer/dart/constant/value.dart';
 
 class XmlDocs {
+
+  static Future<bool> isStringAsset(LibraryReader library,BuildStep buildStep) async {
+    if(library.element.source.shortName=="strings.dart") {
+      ConstantReader styleAnnotation;
+      for (var annotatedElement
+      in library.annotatedWith(TypeChecker.fromRuntime(SfwStyleAnnotation))) {
+        styleAnnotation=annotatedElement.annotation;
+        break;
+      }
+      if(styleAnnotation!=null) {
+        List<DartObject> stringFiles=styleAnnotation.read("stringFiles").listValue;
+        if(stringFiles!=null && stringFiles.length>0) {
+          StringBuffer strings=StringBuffer();
+          strings.writeln("///STRINGS");
+          strings.writeln('class SfwStrings {');
+          List<String> keys=[];
+          StringBuffer generatedKeys=StringBuffer();
+          StringBuffer code=StringBuffer();
+          List<String> classNames=[];
+          int i=1;
+
+          stringFiles.forEach((dart) async {
+            i=await _readStrings(dart.toStringValue(), keys, generatedKeys, i, classNames, code, buildStep);
+          });
+          strings.writeln(generatedKeys);
+          strings.writeln("static get(int code,{String locale='us'}) {");
+          strings.writeln("switch('\$locale') {") ;
+          classNames.forEach((n){
+            strings.writeln("case '$n':return get${n.toLowerCase().replaceRange(0, 1, n.substring(0,1).toUpperCase())}(code);");
+          });
+          strings.writeln("default:return '';");
+          strings.writeln("}");//SWITCH
+          strings.writeln("}");//GET
+          strings.writeln("}");//CLASS
+          return true;
+        }
+
+      }
+    }
+    return false;
+  }
+
+  static Future<bool> isStyleAsset(LibraryReader library,BuildStep buildStep) async {
+    if(library.element.source.shortName=="styles.dart") {
+      StringBuffer styles=StringBuffer();
+      await XmlDocs.build(styles, buildStep);
+      if(styles.length>0) {
+        StringBuffer imports=StringBuffer();
+        imports.writeln("import 'package:flutter/material.dart' show Color,MaterialColor;");
+        buildStep.writeAsString(AssetId(buildStep.inputId.package,
+            buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+            imports.toString()+styles.toString());
+      }
+      return true;
+    }
+    return false;
+  }
 
   static build(StringBuffer s, BuildStep buildStep) async {
     try {
       await _readColor(s, buildStep);
       await _readDimens(s, buildStep);
-      await _readStrings(s, buildStep);
     } catch (e) {}
   }
 
-  static _readStrings(StringBuffer s, BuildStep buildStep) async {
+  static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
     try {
+      String className="";
+
       String appStrings = await readAsset(
-          AssetId(buildStep.inputId.package, "lib/values/strings.xml"),
+          AssetId(buildStep.inputId.package, "lib/$fileName"),
           buildStep);
       if (appStrings.isNotEmpty) {
-        s.writeln('///STRINGS');
-        s.writeln('class SfwStrings {');
         xml.XmlDocument document = xml.parse(appStrings);
-        StringBuffer switchStrings=StringBuffer();
-        int i=1;
+        if(fileName.endsWith("strings.xml")) {
+          className="us";
+        } else {
+          className = fileName.substring(fileName.lastIndexOf("_") + 1);
+          className = className.substring(0, className.indexOf("."));
+        }
+
+        String classToUpper=className.toLowerCase().replaceRange(0, 1, className.substring(0,1).toUpperCase());
+        code.writeln("static String get$classToUpper(int code,{String locale}) {");
+        code.writeln("switch(code) {");
+
         document.children.forEach((child) {
           child.children.forEach((node) {
             String string = node.text;
             if(string.isEmpty)
               return;
             if (string.startsWith("@")) {
-              string = "get(${string.substring(string.indexOf("/") + 1)})";
+              string = "get$classToUpper(${string.substring(string.indexOf("/") + 1)})";
             } else {
               string=" '$string'";
             }
@@ -38,27 +106,26 @@ class XmlDocs {
                 key=attr.value;
 
             });
-            if(key==null || key.isEmpty)
+            if(key==null || key.isEmpty || keys.contains(key))
               return;
-            s.writeln("static const int $key = $i;");
-            switchStrings.writeln("case $key :return $string;");
-
+            keys.add(key);
+            generatedKeys.writeln("static const int $key = $lastKeyValue;");
+            code.writeln("case $key :return $string;");
+            ++lastKeyValue;
           });
-          ++i;
+
         });
-        s.writeln("static String get(int code,{String locale}) {");
-        s.writeln("switch(code) {");
-        s.writeln(switchStrings);
-        s.writeln("default:return '';");
-        s.writeln("}");//SWITCH
-        s.writeln("}");//GET
-        s.writeln("}");//CLASS
+
+        code.writeln("default:return '';");
+        code.writeln("}");//SWITCH
+        code.writeln("}");//GET
+        classNames.add(className);
       }
+      return lastKeyValue;
 
     } catch(e) {
-      s.writeln("/*${e.toString()}*/");
-      s.writeln("}");
     }
+    return lastKeyValue;
   }
 
   static _readColor(StringBuffer s, BuildStep buildStep) async {

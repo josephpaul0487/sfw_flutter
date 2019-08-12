@@ -35,29 +35,8 @@ class DbGenerator extends Generator {
 
     ++filesFinished;
     log.warning("FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
-
-    if(library.element.source.shortName=="styles.dart") {
-      StringBuffer styles=StringBuffer();
-      await XmlDocs.build(styles, buildStep);
-      if(styles.length>0) {
-        StringBuffer imports=StringBuffer();
-        imports.writeln("import 'package:flutter/material.dart' show Color,MaterialColor;");
-        buildStep.writeAsString(AssetId(buildStep.inputId.package,
-            buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-            imports.toString()+styles.toString());
-      }
+    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
       return "";
-    } else if(library.element.source.shortName=="strings.dart") {
-      var styleAnnotation;
-      for (var annotatedElement
-      in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
-        styleAnnotation=annotatedElement;
-        break;
-      }
-      if(styleAnnotation!=null) {
-
-      }
-    }
 
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
