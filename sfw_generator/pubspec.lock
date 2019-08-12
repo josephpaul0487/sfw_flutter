@@ -42,7 +42,7 @@ packages:
       name: build_config
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.1"
+    version: "0.4.1+1"
   build_daemon:
     dependency: transitive
     description:
@@ -70,7 +70,7 @@ packages:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.8"
+    version: "3.0.9"
   built_collection:
     dependency: transitive
     description:
@@ -255,7 +255,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "3.0.0"
   json_rpc_2:
     dependency: transitive
     description:
@@ -387,7 +387,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "3b1f636fa8b841df604e88298085ec22568bb3ce"
+      resolved-ref: e3753ca712a56d6e2d36e7eb73f21949e03418a3
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -514,7 +514,7 @@ packages:
       name: timing
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+1"
+    version: "0.1.1+2"
   typed_data:
     dependency: transitive
     description:
@@ -549,7 +549,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.14"
+    version: "1.0.15"
   xml:
     dependency: "direct main"
     description:
