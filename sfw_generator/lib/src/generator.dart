@@ -55,7 +55,7 @@ class DbGenerator extends Generator {
         break;
       }
       if(styleAnnotation!=null) {
-        
+
       }
     }
 
@@ -63,7 +63,7 @@ class DbGenerator extends Generator {
     entityGenerator.EntitiesGenerator entities =
         entityGenerator.EntitiesGenerator();
     for (var annotatedElement
-        in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
+        in library.annotatedWith(TypeChecker.fromRuntime(SfwStyleAnnotation))) {
       entities.generateForAnnotatedElement(
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }

@@ -5,4 +5,5 @@ export 'src/helper_models.dart';
 export 'src/sfw_styles.dart';
 export 'src/validator.dart';
 export 'src/web.dart';
+export 'src/others.dart';
 
