@@ -39,7 +39,7 @@ class DbGenerator extends Generator {
     if(library.element.source.shortName=="styles.dart") {
       StringBuffer styles=StringBuffer();
       await XmlDocs.build(styles, buildStep);
-      buildStep.writeAsString(AssetId(buildStep.inputId.package, buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")), styles.t);
+      buildStep.writeAsString(AssetId(buildStep.inputId.package, buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")), styles.toString());
     }
 
     final values = Set<String>();
