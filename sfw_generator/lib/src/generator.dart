@@ -35,8 +35,10 @@ class DbGenerator extends Generator {
 
     ++filesFinished;
     log.warning("FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
-    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
-      return "";
+    await XmlDocs.isStyleAsset(library, buildStep);
+    await XmlDocs.isStringAsset(library, buildStep);
+//    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
+//      return "";
 
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
