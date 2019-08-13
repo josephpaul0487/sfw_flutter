@@ -239,7 +239,7 @@ class XmlDocs {
     try {
       return await buildStep.readAsString(assetId);
     } catch (e) {
-      return "";
+      return "/*${e.toString()}*/";
     }
   }
 
