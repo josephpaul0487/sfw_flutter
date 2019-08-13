@@ -44,7 +44,7 @@ class XmlDocs {
           strings.writeln("}");//CLASS
           buildStep.writeAsString(AssetId(buildStep.inputId.package,
               buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-              await normalize(strings.toString()));
+             strings.toString());
           return true;
         }
 
@@ -85,6 +85,7 @@ class XmlDocs {
           buildStep);
       code.writeln("/*content=$appStrings*/");
       if (appStrings.isNotEmpty) {
+        code.writeln("//HAVE VALUE");
         xml.XmlDocument document = xml.parse(appStrings);
         if(fileName.endsWith("strings.xml")) {
           className="us";
@@ -128,6 +129,8 @@ class XmlDocs {
         code.writeln("}");//SWITCH
         code.writeln("}");//GET
         classNames.add(className);
+      } else {
+        code.writeln("//EMPTY VALUE");
       }
       return lastKeyValue;
 
