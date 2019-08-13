@@ -80,9 +80,10 @@ class XmlDocs {
     try {
       String className="";
       code.writeln("//filename=$fileName");
-      String appStrings = await readAsset(
+      /*String appStrings = await readAsset(
           AssetId(buildStep.inputId.package, "lib/$fileName"),
-          buildStep);
+          buildStep);*/
+      String appStrings='<resources><string name="app_name">FSuite Tech</string> <string name="login">Login</string> <string name="default_notification_channel_id">@string/app_name</string></resources>';
       code.writeln("/*content=$appStrings*/");
       if (appStrings.isNotEmpty) {
         code.writeln("//HAVE VALUE");
