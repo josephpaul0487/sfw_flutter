@@ -3,6 +3,7 @@ import 'package:sfw_imports/sfw_imports.dart' show SfwStyleAnnotation;
 import 'package:source_gen/source_gen.dart';
 import 'package:xml/xml.dart' as xml;
 import 'package:analyzer/dart/constant/value.dart';
+import 'package:source_gen/src/output_helpers.dart';
 
 class XmlDocs {
 
@@ -38,10 +39,12 @@ class XmlDocs {
           strings.writeln("default:return '';");
           strings.writeln("}");//SWITCH
           strings.writeln("}");//GET
+          strings.writeln(code);
+
           strings.writeln("}");//CLASS
           buildStep.writeAsString(AssetId(buildStep.inputId.package,
               buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-              strings.toString());
+              await normalize(strings.toString()));
           return true;
         }
 
@@ -59,7 +62,7 @@ class XmlDocs {
         imports.writeln("import 'package:flutter/material.dart' show Color,MaterialColor;");
         buildStep.writeAsString(AssetId(buildStep.inputId.package,
             buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-            imports.toString()+styles.toString());
+            await normalize(imports.toString()+styles.toString()));
       }
       return true;
     }
@@ -76,7 +79,7 @@ class XmlDocs {
   static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
     try {
       String className="";
-
+      code.writeln("//filename=$fileName");
       String appStrings = await readAsset(
           AssetId(buildStep.inputId.package, "lib/$fileName"),
           buildStep);
@@ -127,6 +130,7 @@ class XmlDocs {
       return lastKeyValue;
 
     } catch(e) {
+      code.writeln("/*${e.toString()}*/");
     }
     return lastKeyValue;
   }
@@ -233,5 +237,14 @@ class XmlDocs {
     } catch (e) {
       return "";
     }
+  }
+
+  static Future<String> normalize(String str) async {
+    final values = Set<String>();
+    await for (var value in normalizeGeneratorOutput(str)) {
+      assert(value == null || (value.length == value.trim().length));
+      values.add(value);
+    }
+    return values.join('\n\n');
   }
 }
