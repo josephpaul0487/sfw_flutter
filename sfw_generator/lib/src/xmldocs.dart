@@ -42,7 +42,7 @@ class XmlDocs {
           strings.writeln("}");//CLASS
           buildStep.writeAsString(AssetId(buildStep.inputId.package,
               buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-             strings.toString());
+             await normalize(strings.toString()));
           return true;
         }
 
@@ -57,7 +57,7 @@ class XmlDocs {
       await XmlDocs.build(styles, buildStep);
       if(styles.length>0) {
         StringBuffer imports=StringBuffer();
-        imports.writeln("import 'package:flutter/material.dart' show Color,MaterialColor;");
+        imports.writeln("import 'package:flutter/material.dart' show Color,MaterialColor,Colors;");
         buildStep.writeAsString(AssetId(buildStep.inputId.package,
             buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
             await normalize(imports.toString()+styles.toString()));
@@ -149,12 +149,17 @@ class XmlDocs {
         xml.XmlDocument document = xml.parse(appColors);
         document.children.forEach((child) {
           child.children.forEach((node) {
-            String colorCode = node.text;
-            if (colorCode.startsWith("#")) {
+            String colorCode = _parseColor(node.text);
+            if(colorCode==null)
+              return;
+            /*if (colorCode.startsWith("#")) {
               colorCode = colorCode.length == 9
                   ? "Color(0x${colorCode.substring(1)})"
                   : "Color(0xFF${colorCode.substring(1)})";
             } else if (colorCode.startsWith("@")) {
+              if(colorCode.startsWith("@flutter:color"))
+                colorCode = 'Colors.${colorCode.substring(colorCode.indexOf("/") + 1)}';
+              else
               colorCode = colorCode.substring(colorCode.indexOf("/") + 1);
             } else if (colorCode.split(",").length == 3) {
               var array = colorCode.split(",");
@@ -172,7 +177,7 @@ class XmlDocs {
               colorCode = "Color(0x$colorCode)";
             } else {
               return;
-            }
+            }*/
             node.attributes.forEach((attr) {
               if(attr.name.local=="name")
                 s.writeln("static const Color ${attr.value} = $colorCode;");
@@ -227,6 +232,35 @@ class XmlDocs {
       s.writeln("/*${e.toString()}*/");
       s.writeln("}");
     }
+  }
+
+  static String _parseColor(String colorCode) {
+    if (colorCode.startsWith("#")) {
+      return colorCode.length == 9
+          ? "Color(0x${colorCode.substring(1)})"
+          : "Color(0xFF${colorCode.substring(1)})";
+    } else if (colorCode.startsWith("@")) {
+      if(colorCode.startsWith("@flutter:color"))
+        return   'Colors.${colorCode.substring(colorCode.indexOf("/") + 1)}';
+
+      return  colorCode.substring(colorCode.indexOf("/") + 1);
+    } else if (colorCode.split(",").length == 3) {
+      var array = colorCode.split(",");
+      colorCode =
+      "const MaterialColor(0x${fromRGBO(array[0], array[1], array[2], 1).toRadixString(16)},{";
+      int j = 50;
+      for (double i = .1; i <= 1; j += i == .1 ? 50 : 100, i += .1) {
+        colorCode +=
+        "$j : const Color(0x${fromRGBO(array[0], array[1], array[2], i).toRadixString(16)}),";
+      }
+      colorCode += "})";
+      return colorCode;
+    } else if (colorCode.length == 6) {
+      return  "Color(0xFF$colorCode)";
+    } else if (colorCode.length == 8) {
+      return  "Color(0x$colorCode)";
+    }
+      return null;
   }
 
   static fromRGBO(String r, String g, String b, double opacity) =>
