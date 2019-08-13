@@ -79,11 +79,11 @@ class XmlDocs {
   static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
     try {
       String className="";
-      code.writeln("//filename=$fileName");
-      /*String appStrings = await readAsset(
-          AssetId(buildStep.inputId.package, "lib/$fileName"),
-          buildStep);*/
-      String appStrings='<resources><string name="app_name">FSuite Tech</string> <string name="login">Login</string> <string name="default_notification_channel_id">@string/app_name</string></resources>';
+      code.writeln("//filename=$fileName   pCKAGE=${buildStep.inputId.package}");
+      String appStrings = await readAsset(
+          AssetId(buildStep.inputId.package, "lib/values/strings.xml"),
+          buildStep);
+     // String appStrings='<resources><string name="app_name">FSuite Tech</string> <string name="login">Login</string> <string name="default_notification_channel_id">@string/app_name</string></resources>';
       code.writeln("/*content=$appStrings*/");
       if (appStrings.isNotEmpty) {
         code.writeln("//HAVE VALUE");
