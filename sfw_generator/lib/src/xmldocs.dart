@@ -93,6 +93,7 @@ class XmlDocs {
         code.writeln("static String get$classToUpper(int code,{String locale}) {");
         code.writeln("switch(code) {");
 
+        List<String> keysLocal=[];
         document.children.forEach((child) {
           child.children.forEach((node) {
             String string = node.text;
@@ -109,12 +110,18 @@ class XmlDocs {
                 key=attr.value;
 
             });
-            if(key==null || key.isEmpty || keys.contains(key))
+            if(key==null || key.isEmpty )
               return;
-            keys.add(key);
-            generatedKeys.writeln("static const int $key = $lastKeyValue;");
-            code.writeln("case $key :return $string;");
-            ++lastKeyValue;
+            if(!keys.contains(key)) {
+              keys.add(key);
+              generatedKeys.writeln("static const int $key = $lastKeyValue;");
+              ++lastKeyValue;
+            }
+            if(!keysLocal.contains(key)) {
+              keysLocal.add(key);
+              code.writeln("case $key :return $string;");
+            }
+
           });
 
         });
