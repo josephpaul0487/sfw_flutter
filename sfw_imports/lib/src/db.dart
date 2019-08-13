@@ -10,12 +10,11 @@ class SfwEntity {
 class SfwDbConfig {
   final String dbName;
   final int version;
-  final String lastDartFileName;
   final int totalFileCount;
 
-  const SfwDbConfig(this.dbName, this.lastDartFileName,this.totalFileCount, {this.version = 1})
+  const SfwDbConfig(this.dbName, this.totalFileCount, {this.version = 1})
       : assert(dbName != null),
-        assert(lastDartFileName != null);
+        assert(totalFileCount != null && totalFileCount>0),assert(version!=null && version>0);
 }
 
 class SfwDbField {

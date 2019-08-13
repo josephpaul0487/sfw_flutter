@@ -14,7 +14,6 @@ import 'package:scratch_space/scratch_space.dart';
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
 Set<String> _imports = {};
-//String lastDartFileName = "";
 StringBuffer _dbBuffer = StringBuffer();
 StringBuffer queryBuffer = StringBuffer();
 StringBuffer webQueryBuffer = StringBuffer();
@@ -59,8 +58,7 @@ class DbGenerator extends Generator {
           in library.annotatedWith(TypeChecker.fromRuntime(SfwDbConfig))) {
         String query = generateForAnnotatedElement(
             annotatedElement.element, annotatedElement.annotation, buildStep);
-//        lastDartFileName =
-//            annotatedElement.annotation.read('lastDartFileName').stringValue;
+
         totalFileCount =
             annotatedElement.annotation.read('totalFileCount').intValue;
 

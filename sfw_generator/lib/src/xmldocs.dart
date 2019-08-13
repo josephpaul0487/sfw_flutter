@@ -83,6 +83,7 @@ class XmlDocs {
       String appStrings = await readAsset(
           AssetId(buildStep.inputId.package, "lib/$fileName"),
           buildStep);
+      code.writeln("/*content=$appStrings*/");
       if (appStrings.isNotEmpty) {
         xml.XmlDocument document = xml.parse(appStrings);
         if(fileName.endsWith("strings.xml")) {
@@ -99,6 +100,7 @@ class XmlDocs {
         document.children.forEach((child) {
           child.children.forEach((node) {
             String string = node.text;
+            code.writeln("//STRING=$string");
             if(string.isEmpty)
               return;
             if (string.startsWith("@")) {
