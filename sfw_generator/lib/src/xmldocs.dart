@@ -39,6 +39,9 @@ class XmlDocs {
           strings.writeln("}");//SWITCH
           strings.writeln("}");//GET
           strings.writeln("}");//CLASS
+          buildStep.writeAsString(AssetId(buildStep.inputId.package,
+              buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+              strings.toString());
           return true;
         }
 
