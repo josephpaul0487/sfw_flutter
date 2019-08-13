@@ -25,11 +25,9 @@ class XmlDocs {
           StringBuffer generatedKeys=StringBuffer();
           StringBuffer code=StringBuffer();
           List<String> classNames=[];
-          int i=1;
-
-          stringFiles.forEach((dart) async {
-            i=await _readStrings(dart.toStringValue(), keys, generatedKeys, i, classNames, code, buildStep);
-          });
+          for(int i=1,j=0;j<stringFiles.length;++j) {
+            i=await _readStrings(stringFiles[j].toStringValue(), keys, generatedKeys, i, classNames, code, buildStep);
+          }
           strings.writeln(generatedKeys);
           strings.writeln("static get(int code,{String locale='us'}) {");
           strings.writeln("switch('\$locale') {") ;
@@ -81,7 +79,7 @@ class XmlDocs {
       String className="";
       code.writeln("//filename=$fileName   pCKAGE=${buildStep.inputId.package}");
       String appStrings = await readAsset(
-          AssetId(buildStep.inputId.package, "lib/values/strings.xml"),
+          AssetId(buildStep.inputId.package, "lib/$fileName"),
           buildStep);
      // String appStrings='<resources><string name="app_name">FSuite Tech</string> <string name="login">Login</string> <string name="default_notification_channel_id">@string/app_name</string></resources>';
       code.writeln("/*content=$appStrings*/");
