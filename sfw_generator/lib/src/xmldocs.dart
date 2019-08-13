@@ -77,14 +77,10 @@ class XmlDocs {
   static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
     try {
       String className="";
-      code.writeln("//filename=$fileName   pCKAGE=${buildStep.inputId.package}");
       String appStrings = await readAsset(
           AssetId(buildStep.inputId.package, "lib/$fileName"),
           buildStep);
-     // String appStrings='<resources><string name="app_name">FSuite Tech</string> <string name="login">Login</string> <string name="default_notification_channel_id">@string/app_name</string></resources>';
-      code.writeln("/*content=$appStrings*/");
       if (appStrings.isNotEmpty) {
-        code.writeln("//HAVE VALUE");
         xml.XmlDocument document = xml.parse(appStrings);
         if(fileName.endsWith("strings.xml")) {
           className="us";
@@ -100,7 +96,6 @@ class XmlDocs {
         document.children.forEach((child) {
           child.children.forEach((node) {
             String string = node.text;
-            code.writeln("//STRING=$string");
             if(string.isEmpty)
               return;
             if (string.startsWith("@")) {
@@ -128,13 +123,10 @@ class XmlDocs {
         code.writeln("}");//SWITCH
         code.writeln("}");//GET
         classNames.add(className);
-      } else {
-        code.writeln("//EMPTY VALUE");
       }
       return lastKeyValue;
 
     } catch(e) {
-      code.writeln("/*${e.toString()}*/");
     }
     return lastKeyValue;
   }
