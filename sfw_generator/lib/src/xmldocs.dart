@@ -215,7 +215,9 @@ class XmlDocs {
             s.writeln("static const ${type==null?'double':type} $key = $dimenCode;");
 
           });
-        });
+        }
+        );
+        s.writeln("}");
       }
 
     } catch(e) {
