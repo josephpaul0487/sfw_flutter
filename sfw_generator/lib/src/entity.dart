@@ -25,6 +25,7 @@ class EntitiesGenerator {
 
   String generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
+    log.warning("ENTITY");
     if (element is! ClassElement) {
       final name = element.name;
       throw InvalidGenerationSourceError('Generator cannot target `$name`.',
@@ -35,6 +36,7 @@ class EntitiesGenerator {
     final classElement = element as ClassElement;
 
     final helper = _GeneratorHelper();
+    log.warning("ENTITY 2");
     final _gen = helper._generate(classElement, annotation, buildStep);
 
     //++i;
@@ -87,6 +89,7 @@ class _GeneratorHelper {
   String _generate(
       ClassElement element, ConstantReader annotation, BuildStep buildStep) {
     final sortedFields = EntitiesGenerator.createSortedFieldSet(element);
+    log.warning("GENERATE 1");
 
     // Used to keep track of why a field is ignored. Useful for providing
     // helpful errors when generating constructor calls that try to use one of
@@ -113,6 +116,7 @@ class _GeneratorHelper {
 
       return map;
     });
+    log.warning("GENERATE 2");
 
     StringBuffer buffer = StringBuffer();
     bool isAnDbEntity=annotation.read('isAnDbEntity').boolValue;
@@ -193,6 +197,8 @@ class _GeneratorHelper {
     getter.write(
         'static dynamic get(${element.name} model,String fieldName,{bool toJson=true}) {');
     getter.writeln('switch(fieldName) {');
+
+    log.warning("GENERATE 3");
     //FIELDS
     int i = 0;
     // List<SfwDbField> dbFields=[];
@@ -307,7 +313,7 @@ class _GeneratorHelper {
 
           buffer.write(
               " ${excludedTables.toString()}  json['$dbFieldName'] = model.$str==null?null:$encode;");
-
+          log.warning("GENERATE 4");
           break;
       }
       jsonToJson.write(
@@ -352,7 +358,7 @@ class _GeneratorHelper {
       }
       if (!getterFiledSet)
         getter.writeln('case "${e.name}": return model.${e.name};');
-      i++;
+      ++i;
     });
 
     //END LOOP
