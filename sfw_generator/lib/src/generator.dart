@@ -39,6 +39,7 @@ class DbGenerator extends Generator {
 //    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
 //      return "";
 
+    log.warning("FIRST");
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
         entityGenerator.EntitiesGenerator();
@@ -47,6 +48,8 @@ class DbGenerator extends Generator {
       entities.generateForAnnotatedElement(
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }
+
+    log.warning("SECOND");
 
     _imports.addAll(entityGenerator.imports);
 
@@ -71,7 +74,7 @@ class DbGenerator extends Generator {
       }
     }
 
-
+    log.warning("THIRD");
     if (webConfigBuffer.isEmpty) {
       for (var annotatedElement
           in library.annotatedWith(TypeChecker.fromRuntime(SfwWebConfig))) {
@@ -102,12 +105,13 @@ class DbGenerator extends Generator {
         break;
       }
     }
-
+    log.warning("FOURTH");
     for (var annotatedElement
         in library.annotatedWith(_jsonWebCallChecker)) {
       _generateWebCall(
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }
+    log.warning("FIVE");
     if (totalFileCount>-1 &&
         totalFileCount==filesFinished) {
       if (entityGenerator.error == null) {
@@ -168,7 +172,7 @@ class DbGenerator extends Generator {
         s.writeln(entityGenerator.error);
       }
 
-
+      log.warning("SIX");
 
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {

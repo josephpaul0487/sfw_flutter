@@ -1,13 +1,23 @@
+class SfwWebResponseType {
+  static const String STREAM = "stream";
+  static const String JSON = "json";
+  static const String BYTES = "bytes";
+  static const String PLAIN = "plain";
+}
 
+class SfwWebContentType {
+  static const String TEXT = "text";
+  static const String JSON = "json";
+  static const String HTML = "html";
+  static const String BINARY = "binary";
+}
 
-class SfwWebResponseType { static const String STREAM="stream";
-static const String JSON="json";
-static const String BYTES="bytes";
-static const String  PLAIN="plain"; }
-
-class SfwWebContentType { static const String TEXT="text";static const String  JSON="json";static const String  HTML="html";static const String  BINARY="binary"; }
-
-class SfwWebCallType { static const String GET="get"; static const String POST="post";static const String PUT="put";static const String  DELETE="delete"; }
+class SfwWebCallType {
+  static const String GET = "get";
+  static const String POST = "post";
+  static const String PUT = "put";
+  static const String DELETE = "delete";
+}
 
 class SfwWebConfig {
   final String baseUrl;
@@ -22,7 +32,7 @@ class SfwWebConfig {
       this.responseType = SfwWebResponseType.JSON,
       this.header = const {}})
       : assert(baseUrl != null &&
-            baseUrl!="" &&
+            baseUrl != "" &&
             debug != null &&
             contentType != null &&
             responseType != null &&
@@ -32,6 +42,8 @@ class SfwWebConfig {
 class SfwWebCall {
   final String url;
   final bool useBaseUrl;
+
+  ///Should implement StatusInterface || DataListInterface  ||  DataInterface
   final Type responseClassType;
   final Type responseGenericType;
   final List<int> responseSuccessCodes;
@@ -44,6 +56,8 @@ class SfwWebCall {
   final String contentType;
   final String responseType;
   final bool isMultiPart;
+  final int connectTimeout;
+  final int receiveTimeout;
 
   const SfwWebCall(this.url, this.responseClassType,
       {this.responseGenericType,
@@ -57,7 +71,9 @@ class SfwWebCall {
       this.setDataAsNamedParameter = false,
       this.isMultiPart = false,
       this.header = const {},
-      this.dataKeys = const []})
+      this.dataKeys = const [],
+      this.connectTimeout,
+      this.receiveTimeout})
       : assert(url != null &&
             responseClassType != null &&
             useBaseUrl != null &&
@@ -67,7 +83,7 @@ class SfwWebCall {
             setDataAsNormalParameter != null &&
             isMultiPart != null &&
             header != null &&
-            dataKeys != null);//,
+            dataKeys != null),assert(responseClassType is String); //,
 //        assert(
 //            responseClassType is StatusInterface ||
 //                ((responseClassType is DataListInterface ||

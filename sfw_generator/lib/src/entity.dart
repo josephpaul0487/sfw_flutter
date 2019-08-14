@@ -21,7 +21,7 @@ const List<String> reservedKeys=["add","all","alter","and","as","autoincrement",
 String error;
 
 class EntitiesGenerator {
-  int i = 0;
+  //int i = 0;
 
   String generateForAnnotatedElement(
       Element element, ConstantReader annotation, BuildStep buildStep) {
@@ -37,7 +37,7 @@ class EntitiesGenerator {
     final helper = _GeneratorHelper();
     final _gen = helper._generate(classElement, annotation, buildStep);
 
-    i++;
+    //++i;
 
     return _gen;
     // return {"// Hey! Annotation found!  $s"};
@@ -221,7 +221,7 @@ class _GeneratorHelper {
       int j = 0;
       excluded.forEach((e) {
         if (j != 0) excludedTables.write(' && ');
-        j++;
+        ++j;
         excludedTables.write(
             'table != ${e.toStringValue() == null ? 'null' : '"${e.toStringValue()}"'}');
       });
