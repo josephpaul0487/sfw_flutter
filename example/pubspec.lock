@@ -7,7 +7,7 @@ packages:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.37.0"
+    version: "0.37.1"
   args:
     dependency: transitive
     description:
@@ -122,7 +122,7 @@ packages:
       name: front_end
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.20"
+    version: "0.1.21"
   glob:
     dependency: transitive
     description:
@@ -150,7 +150,7 @@ packages:
       name: kernel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.20"
+    version: "0.3.21"
   logging:
     dependency: transitive
     description:
@@ -240,7 +240,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "880591497444b316c2eebe8516d236a8bddc30c0"
+      resolved-ref: "97d503ff3eeb792a9a496229666e767b1c9d4108"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -249,7 +249,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "880591497444b316c2eebe8516d236a8bddc30c0"
+      resolved-ref: "97d503ff3eeb792a9a496229666e767b1c9d4108"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
