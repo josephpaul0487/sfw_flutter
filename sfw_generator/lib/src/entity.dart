@@ -5,7 +5,7 @@ import 'package:analyzer/src/dart/resolver/inheritance_manager.dart'
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'reflection.dart';
+//import 'reflection.dart';
 
 
 List<StringBuffer> mainBuffer = [];

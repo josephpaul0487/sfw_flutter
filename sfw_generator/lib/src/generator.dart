@@ -8,8 +8,6 @@ import 'package:source_gen/source_gen.dart';
 import 'package:source_gen/src/output_helpers.dart';
 import 'entity.dart' as entityGenerator;
 import 'xmldocs.dart';
-import 'package:glob/glob.dart';
-import 'package:scratch_space/scratch_space.dart';
 
 int totalElements = 0;
 List<StringBuffer> _mainBuffer = [];
