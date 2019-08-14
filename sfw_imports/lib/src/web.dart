@@ -83,7 +83,7 @@ class SfwWebCall {
             setDataAsNormalParameter != null &&
             isMultiPart != null &&
             header != null &&
-            dataKeys != null),assert(responseClassType is String); //,
+            dataKeys != null); //,
 //        assert(
 //            responseClassType is StatusInterface ||
 //                ((responseClassType is DataListInterface ||
