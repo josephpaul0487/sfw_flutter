@@ -234,7 +234,7 @@ class _GeneratorHelper {
      // isFieldContains.writeln()
 
       if (annotation != null) {
-        if(annotation.getField('name').toStringValue()!=null)
+        if(annotation.getField('name').toStringValue()!=null && annotation.getField('name').toStringValue().trim().isNotEmpty)
           dbFieldName = annotation.getField('name').toStringValue();
 
         isAnEntity = annotation.getField("isAnEntity").toBoolValue();
