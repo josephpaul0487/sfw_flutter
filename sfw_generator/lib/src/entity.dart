@@ -325,7 +325,7 @@ class _GeneratorHelper {
 
       bool getterFiledSet = false;
 
-      if (dbFieldName != 'id') {
+      //if (dbFieldName != 'id') {
         if (fields.length > 0) fields.write(', ');
         fields.write('$dbFieldName ');
         switch (e.type.name) {
@@ -372,7 +372,7 @@ class _GeneratorHelper {
             fields.write("TEXT");
             break;
         }
-      }
+      //}
       if (!getterFiledSet)
         getter.writeln('case "${e.name}": return model.${e.name};');
       i++;
