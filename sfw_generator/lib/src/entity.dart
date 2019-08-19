@@ -333,9 +333,9 @@ class _GeneratorHelper {
           break;
           case 'int':
             if(isPrimary)
-              fields.write("INTEGER PRIMARY KEY ${isAutoIncrement?'AUTOINCREMENT':''}");
+              fields.write("INTEGER PRIMARY KEY${isAutoIncrement?' AUTOINCREMENT':''}");
             else if(isUnique)
-              fields.write("INTEGER UNIQUE ${canNull?'':'NOT NULL'}");
+              fields.write("INTEGER UNIQUE${canNull?'':' NOT NULL'}");
             else if(!canNull)
               fields.write("INTEGER NOT NULL");
             else
@@ -347,9 +347,9 @@ class _GeneratorHelper {
             break;
           case 'String':
             if(isPrimary)
-              fields.write("TEXT PRIMARY KEY ");
+              fields.write("TEXT PRIMARY KEY");
             else if(isUnique)
-              fields.write("TEXT UNIQUE ${canNull?'':'NOT NULL'}");
+              fields.write("TEXT UNIQUE${canNull?'':' NOT NULL'}");
             else if(!canNull)
               fields.write("TEXT NOT NULL");
             else
@@ -380,7 +380,19 @@ class _GeneratorHelper {
 
     //END LOOP
     if(isAnDbEntity) {
-      String tableStatement=fields.toString().contains("PRIMARY KEY")?fields.toString():"id INTEGER PRIMARY KEY AUTOINCREMENT,${fields.toString()}";
+      if(!fields.toString().contains("PRIMARY KEY")) {
+        error =
+        'Generator cannot  create table "${element
+            .name}". This table does not have  primary key. Please use SfwDbPrimary annotation to set a primary key (Should only use on int OR String).   Found in  :  CLASS -> "${element
+            .name}"  FILE -> ${element.source.fullName}';
+        throw InvalidGenerationSourceError(
+            'Generator cannot  create table "${element
+                .name}". This table does not have  primary key. Please use SfwDbPrimary annotation to set a primary key (Should only use on int OR String).   Found in  :  CLASS -> "${element
+                .name}"  FILE -> ${element.source.fullName}',
+            element: element);
+      }
+//      String tableStatement=fields.toString().contains("PRIMARY KEY")?fields.toString():"sfwId INTEGER PRIMARY KEY AUTOINCREMENT,${fields.toString()}";
+      String tableStatement=fields.toString();
       if (tables.length == 0) {
         if (reservedKeys.contains(element.name.toLowerCase())) {
           error =
@@ -533,7 +545,7 @@ _createDbFunctions(
       'static Future<int> insertAll(String table,{List<${element.name}> models,List<dynamic> jsonList,String jsonStringList,String nullColumnHack, ConflictAlgorithm conflictAlgorithm=ConflictAlgorithm.ignore}) async { ');
   buffer.writeln('int inserted=0;');
   buffer.writeln('if(models!=null)');
-  buffer.writeln('for(var model in models) async {');
+  buffer.writeln('for(var model in models) {');
   buffer.writeln(
       ' int id= await insert(table,model:model,nullColumnHack:nullColumnHack,conflictAlgorithm:conflictAlgorithm);');
   buffer.writeln('if(id>0) ');
