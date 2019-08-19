@@ -209,10 +209,15 @@ class _GeneratorHelper {
 
       String dbFieldName = str;
       final annotation = annotationForDbName(e);
+      final primaryAnnotation=annotationForDbPrimary(e);
+      final isPrimary=primaryAnnotation!=null;
       bool isAnEntity = false;
       String genericType;
       bool isList=e.type.name == "List";
       bool isMap=e.type.name == "Map";
+      bool isUnique=false;
+      bool canNull=true;
+      bool isAutoIncrement=primaryAnnotation==null || primaryAnnotation.getField("isAutoIncrement").toBoolValue();
       StringBuffer excludedTables = StringBuffer();
 
 
@@ -233,7 +238,8 @@ class _GeneratorHelper {
           dbFieldName = annotation.getField('name').toStringValue();
 
         isAnEntity = annotation.getField("isAnEntity").toBoolValue();
-        isAnEntity = annotation.getField("isAnEntity").toBoolValue();
+        isUnique = annotation.getField("isUnique").toBoolValue();
+        canNull = annotation.getField("canNull").toBoolValue();
         genericType = annotation.getField("genericType").toTypeValue()?.name;
 
 
@@ -323,16 +329,31 @@ class _GeneratorHelper {
         if (fields.length > 0) fields.write(', ');
         fields.write('$dbFieldName ');
         switch (e.type.name) {
-          case 'bool':
+          case 'bool':fields.write("INTEGER");
+          break;
           case 'int':
-            fields.write("INTEGER");
+            if(isPrimary)
+              fields.write("INTEGER PRIMARY KEY ${isAutoIncrement?'AUTOINCREMENT':''}");
+            else if(isUnique)
+              fields.write("INTEGER UNIQUE ${canNull?'':'NOT NULL'}");
+            else if(!canNull)
+              fields.write("INTEGER NOT NULL");
+            else
+              fields.write("INTEGER");
             break;
 
           case 'double':
             fields.write("REAL");
             break;
           case 'String':
-            fields.write("TEXT");
+            if(isPrimary)
+              fields.write("TEXT PRIMARY KEY ");
+            else if(isUnique)
+              fields.write("TEXT UNIQUE ${canNull?'':'NOT NULL'}");
+            else if(!canNull)
+              fields.write("TEXT NOT NULL");
+            else
+              fields.write("TEXT");
             break;
           default:
             getterFiledSet=true;

@@ -6,6 +6,7 @@ import 'package:source_gen/source_gen.dart';
 final _jsonKeyChecker = const TypeChecker.fromRuntime(SfwEntity);
 final _dbNameChecker = const TypeChecker.fromRuntime(SfwDbField);
 final _dbExcludeChecker = const TypeChecker.fromRuntime(SfwDbExclude);
+final _dbPrimaryChecker = const TypeChecker.fromRuntime(SfwDbPrimary);
 DartObject jsonKeyAnnotation(FieldElement element) =>
     _jsonKeyChecker.firstAnnotationOfExact(element) ??
         (element.getter == null
@@ -14,6 +15,11 @@ DartObject jsonKeyAnnotation(FieldElement element) =>
 
 DartObject annotationForDbName(FieldElement element) =>
     _dbNameChecker.firstAnnotationOfExact(element) ??
+        (element.getter == null
+            ? null
+            : _dbNameChecker.firstAnnotationOfExact(element.getter));
+DartObject annotationForDbPrimary(FieldElement element) =>
+    _dbPrimaryChecker.firstAnnotationOfExact(element) ??
         (element.getter == null
             ? null
             : _dbNameChecker.firstAnnotationOfExact(element.getter));

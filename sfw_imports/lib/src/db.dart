@@ -29,7 +29,8 @@ class SfwDbField {
 }
 
 class SfwDbPrimary {
-  const SfwDbPrimary();
+  final bool isAutoIncrement;
+  const SfwDbPrimary(this.isAutoIncrement):assert(isAutoIncrement!=null);
 }
 
 class SfwDbExclude {
