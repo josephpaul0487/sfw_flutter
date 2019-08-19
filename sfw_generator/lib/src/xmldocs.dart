@@ -152,32 +152,7 @@ class XmlDocs {
             String colorCode = _parseColor(node.text);
             if(colorCode==null)
               return;
-            /*if (colorCode.startsWith("#")) {
-              colorCode = colorCode.length == 9
-                  ? "Color(0x${colorCode.substring(1)})"
-                  : "Color(0xFF${colorCode.substring(1)})";
-            } else if (colorCode.startsWith("@")) {
-              if(colorCode.startsWith("@flutter:color"))
-                colorCode = 'Colors.${colorCode.substring(colorCode.indexOf("/") + 1)}';
-              else
-              colorCode = colorCode.substring(colorCode.indexOf("/") + 1);
-            } else if (colorCode.split(",").length == 3) {
-              var array = colorCode.split(",");
-              colorCode =
-                  "const MaterialColor(0x${fromRGBO(array[0], array[1], array[2], 1).toRadixString(16)},{";
-              int j = 50;
-              for (double i = .1; i <= 1; j += i == .1 ? 50 : 100, i += .1) {
-                colorCode +=
-                    "$j : const Color(0x${fromRGBO(array[0], array[1], array[2], i).toRadixString(16)}),";
-              }
-              colorCode += "})";
-            } else if (colorCode.length == 6) {
-              colorCode = "Color(0xFF$colorCode)";
-            } else if (colorCode.length == 8) {
-              colorCode = "Color(0x$colorCode)";
-            } else {
-              return;
-            }*/
+
             node.attributes.forEach((attr) {
               if(attr.name.local=="name")
                 s.writeln("static const Color ${attr.value} = $colorCode;");

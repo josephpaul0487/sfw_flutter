@@ -31,21 +31,21 @@ class DBProvider {
   }
 
   Batch getBatch() => _db.batch();
-  Future<int> rawDelete(String sql, [List<dynamic> arguments]) =>
-      _db.rawDelete(sql, arguments);
+  Future<int> rawDelete(String sql, [List<dynamic> arguments]) async =>
+      await _db.rawDelete(sql, arguments);
 
-  Future<int> delete(String table, {String where, List<dynamic> whereArgs}) =>
-      _db.delete(table, where: where, whereArgs: whereArgs);
+  Future<int> delete(String table, {String where, List<dynamic> whereArgs}) async =>
+      await _db.delete(table, where: where, whereArgs: whereArgs);
 
-  Future<void> execute(String sql, [List<dynamic> arguments]) =>
-      _db.execute(sql, arguments);
+  Future<void> execute(String sql, [List<dynamic> arguments]) async =>
+      await _db.execute(sql, arguments);
 
-  Future<int> rawInsert(String sql, [List<dynamic> arguments]) =>
-      _db.rawInsert(sql, arguments);
+  Future<int> rawInsert(String sql, [List<dynamic> arguments]) async =>
+      await _db.rawInsert(sql, arguments);
 
   Future<int> insert(String table, Map<String, dynamic> values,
-      {String nullColumnHack, ConflictAlgorithm conflictAlgorithm}) =>
-      _db.insert(table, values,
+      {String nullColumnHack, ConflictAlgorithm conflictAlgorithm}) async =>
+      await _db.insert(table, values,
           nullColumnHack: nullColumnHack, conflictAlgorithm: conflictAlgorithm);
 
   Future<List<Map<String, dynamic>>> query(String table,
@@ -57,8 +57,8 @@ class DBProvider {
         String having,
         String orderBy,
         int limit,
-        int offset}) =>
-      _db.query(table,
+        int offset}) async =>
+      await _db.query(table,
           distinct: distinct == null ? false : distinct,
           columns: columns,
           where: where,
@@ -69,17 +69,17 @@ class DBProvider {
           limit: limit,
           offset: offset);
   Future<List<Map<String, dynamic>>> rawQuery(String sql,
-      [List<dynamic> arguments]) =>
-      _db.rawQuery(sql, arguments);
+      [List<dynamic> arguments]) async =>
+      await _db.rawQuery(sql, arguments);
 
-  Future<int> rawUpdate(String sql, [List<dynamic> arguments]) =>
-      _db.rawUpdate(sql, arguments);
+  Future<int> rawUpdate(String sql, [List<dynamic> arguments]) async =>
+      await _db.rawUpdate(sql, arguments);
 
   Future<int> update(String table, Map<String, dynamic> values,
       {String where,
         List<dynamic> whereArgs,
-        ConflictAlgorithm conflictAlgorithm}) =>
-      _db.update(table, values,
+        ConflictAlgorithm conflictAlgorithm}) async =>
+      await _db.update(table, values,
           where: where,
           whereArgs: whereArgs,
           conflictAlgorithm: conflictAlgorithm);

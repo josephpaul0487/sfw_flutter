@@ -81,9 +81,11 @@ class DbGenerator extends Generator {
         final String responseType =
             annotatedElement.annotation.read('responseType').stringValue;
         final Map<String, String> header ={};
-            annotatedElement.annotation.read('header').mapValue.forEach((key,value){
-              header["'${key.toStringValue()}'"]="'${value.toStringValue()}'";
-            }) ;
+        var entries=annotatedElement.annotation.read('header').mapValue.entries;
+
+            for(var entry in entries){
+              header["'${entry.key.toStringValue()}'"]="'${entry.value.toStringValue()}'";
+            }
 
         webConfigBuffer.clear();
         webConfigBuffer.writeln('class ${annotatedElement.element.name} {');
@@ -114,14 +116,16 @@ class DbGenerator extends Generator {
             "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
         entityGenerator.createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
-        entityGenerator.tablesMetaData.forEach((map){
+        entityGenerator.createStatements.writeln("_batch.delete('sfwMeta');");
+        for(var map in entityGenerator.tablesMetaData) {
           entityGenerator.createStatements.writeln("_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
-        });
+        }
+
         createDb(_dbBuffer, buildStep, dbVersion, dbName, entityGenerator.createStatements.toString());
 
-        _mainBuffer.forEach((buffer) {
+        for(var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
-        });
+        }
 
 
         _dbBuffer.writeln("//FUNCTIONS DEFINITION");
@@ -134,9 +138,9 @@ class DbGenerator extends Generator {
             .contains('typedef DbErrorCallBack = void Function(String e);'))
           _dbBuffer
               .writeln('typedef DbErrorCallBack = void Function(String e);');
-        entityGenerator.typeDefs.forEach((s) {
+        for(var s in entityGenerator.typeDefs) {
           _dbBuffer.writeln(s);
-        });
+        }
         if(webConfigBuffer.isNotEmpty) {
           _dbBuffer.writeln("//WEBSERVICE");
           _dbBuffer.writeln(webConfigBuffer);
@@ -157,9 +161,9 @@ class DbGenerator extends Generator {
         _imports.add("import 'dart:io' show ContentType,ResponseType;");
       }
       if (entityGenerator.error == null) {
-        _imports.forEach((import) {
+        for(var import in _imports) {
           s.write(import);
-        });
+        }
       } else {
         queryBuffer.clear();
         _dbBuffer.clear();
@@ -301,13 +305,13 @@ class DbGenerator extends Generator {
           List<String> userDefinedParams = [];
           StringBuffer params = StringBuffer();
 
-          method.parameters.forEach((type) {
+          for(var type in method.parameters) {
             methodBuilder.write(", ");
             methodBuilder.write('${type.type} ${type.name}');
             userDefinedParams.add("${type.name}");
-          });
-          queryParams.forEach((queryParam) {
-            if (queryParam == 'limit' && callbackType == '') return;
+          }
+          for(var queryParam in queryParams) {
+            if (queryParam == 'limit' && callbackType == '') continue;
             params.write(',$queryParam: ');
             if (userDefinedParams.contains(queryParam)) {
               params.write(queryParam);
@@ -382,7 +386,7 @@ class DbGenerator extends Generator {
                   params.write(dartObject.getField('limit').toIntValue());
               }
             }
-          });
+          }
 
           methodBuilder.write(') async { ');
           methodBuilder.writeln(' return await ');
@@ -428,9 +432,9 @@ class DbGenerator extends Generator {
    // _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
     _dbBuffer.writeln("import 'package:flutter_screenutil/flutter_screenutil.dart';");
     _dbBuffer.writeln("import 'package:flutter/material.dart';");// show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle,StatefulWidget,State,Colors;");
-    _imports.forEach((import) {
+    for(var import in _imports) {
       _dbBuffer.writeln(import);
-    });
+    }
     return methodBuilder.toString();
   }
 

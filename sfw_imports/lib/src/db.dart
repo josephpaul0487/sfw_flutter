@@ -21,8 +21,15 @@ class SfwDbField {
   final String name;
   final bool isAnEntity;
   final Type genericType;
+  final bool isUnique;
+  final bool canNull;
 
-  const SfwDbField(this.name,{this.isAnEntity=false,this.genericType}) : assert(name != null && name != ''),assert(isAnEntity!=null);
+
+  const SfwDbField({this.name,this.isAnEntity=false,this.genericType,this.isUnique=false,this.canNull=true}) : assert(name != null && name != ''),assert(isAnEntity!=null),assert(isUnique!=null),assert(canNull!=null);
+}
+
+class SfwDbPrimary {
+  const SfwDbPrimary();
 }
 
 class SfwDbExclude {

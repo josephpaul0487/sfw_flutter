@@ -126,10 +126,10 @@ class _GeneratorHelper {
 
     //TABLE NAMES TO STATIC FIELDS
     List<DartObject> tables = annotation.read('tables').listValue;
-    tables.forEach((dart) {
+    for(var dart in tables) {
       buffer.writeln(
           "static const ${dart.toStringValue().toUpperCase()} = '${dart.toStringValue()}';");
-    });
+    }
 
     //CALLBACK FUNCTIONS
     if (!typeDefs.contains(
@@ -170,9 +170,9 @@ class _GeneratorHelper {
     jsonToJsonList.writeln('if ((columns == null || columns.isEmpty)  && (table==null || table.trim()=="") )');
     jsonToJsonList.writeln("return listToCheck;");
     jsonToJsonList.writeln('List< dynamic> list = [];');
-    jsonToJsonList.writeln('listToCheck.forEach((item) {');
+    jsonToJsonList.writeln('for(var item in listToCheck) {');
     jsonToJsonList.writeln('list.add(jsonToJson(item,columns:columns,table:table));');
-    jsonToJsonList.writeln('});');
+    jsonToJsonList.writeln('}');
     jsonToJsonList.writeln('return list;');
     jsonToJsonList.writeln('}');
     jsonToJsonList.writeln('');
@@ -229,7 +229,9 @@ class _GeneratorHelper {
      // isFieldContains.writeln()
 
       if (annotation != null) {
-        dbFieldName = annotation.getField('name').toStringValue();
+        if(annotation.getField('name').toStringValue()!=null)
+          dbFieldName = annotation.getField('name').toStringValue();
+
         isAnEntity = annotation.getField("isAnEntity").toBoolValue();
         isAnEntity = annotation.getField("isAnEntity").toBoolValue();
         genericType = annotation.getField("genericType").toTypeValue()?.name;
@@ -357,6 +359,7 @@ class _GeneratorHelper {
 
     //END LOOP
     if(isAnDbEntity) {
+      String tableStatement=fields.toString().contains("PRIMARY KEY")?fields.toString():"id INTEGER PRIMARY KEY AUTOINCREMENT,${fields.toString()}";
       if (tables.length == 0) {
         if (reservedKeys.contains(element.name.toLowerCase())) {
           error =
@@ -371,9 +374,9 @@ class _GeneratorHelper {
         }
         createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS ${element
-                .name} (id INTEGER PRIMARY KEY,${fields.toString()})');");
+                .name} ($tableStatement)');");
         tablesMetaData.add('"sfwKey":"${element
-            .name}","sfwValue":"id INTEGER PRIMARY KEY,${fields.toString()}"');
+            .name}","sfwValue":"$tableStatement"');
       } else {
         tables.forEach((dart) {
           if (reservedKeys.contains(element.name.toLowerCase())) {
@@ -389,11 +392,9 @@ class _GeneratorHelper {
           }
           createStatements.writeln(
               "_batch.execute('CREATE TABLE IF NOT EXISTS ${dart
-                  .toStringValue()} (id INTEGER PRIMARY KEY,${fields
-                  .toString()})');");
+                  .toStringValue()} ($tableStatement)');");
           tablesMetaData.add('"sfwKey":"${dart
-              .toStringValue()}","sfwValue":"id INTEGER PRIMARY KEY,${fields
-              .toString()}"');
+              .toStringValue()}","sfwValue":"$tableStatement"');
         });
       }
     }
@@ -404,18 +405,18 @@ class _GeneratorHelper {
     buffer.writeln('    return json;');
     buffer.writeln(' }');
     buffer.writeln('Map<String, dynamic> map = {};');
-    buffer.writeln('columns.forEach((column) {');
+    buffer.writeln('for(var column in columns) {');
     buffer.writeln('map[column] = get(model, column);');
-    buffer.writeln('});');
+    buffer.writeln('}');
     buffer.writeln('return map;');
     buffer.writeln('}');
 
     jsonToJson.writeln('    return json;');
     jsonToJson.writeln(' }');
     jsonToJson.writeln('Map<String, dynamic> map = {};');
-    jsonToJson.writeln('columns.forEach((column) {');
+    jsonToJson.writeln('for(var column in columns) {');
     jsonToJson.writeln('map[column] = mapToCheck[column];');
-    jsonToJson.writeln('});');
+    jsonToJson.writeln('}');
     jsonToJson.writeln('return map;');
     jsonToJson.writeln('}');
 
@@ -433,9 +434,9 @@ class _GeneratorHelper {
     buffer.writeln(
         'static List<${element.name}> fromJsonList(List<dynamic> data, {List<String> columns, bool fromDatabase = $isAnDbEntity}) {');
     buffer.writeln('List<${element.name}> list=[];');
-    buffer.writeln('data.forEach((g){');
+    buffer.writeln('for(var g in data){');
     buffer.writeln('list.add(${element.name}SFW.fromJson(g as Map,fromDatabase:fromDatabase,columns:columns));');
-    buffer.writeln('});');
+    buffer.writeln('}');
     buffer.writeln('return list;');
     buffer.writeln('}');
 
@@ -443,9 +444,9 @@ class _GeneratorHelper {
     buffer.writeln(
         'static List<dynamic> toJsonList(List<${element.name}> data, {List<String> columns,bool toDatabase=$isAnDbEntity}) {');
     buffer.writeln('List<dynamic> list=[];');
-    buffer.writeln('data.forEach((g){');
+    buffer.writeln('for(var g in data){');
     buffer.writeln('list.add(${element.name}SFW.toJson(g,columns:columns,toDatabase:toDatabase));');
-    buffer.writeln('});');
+    buffer.writeln('}');
     buffer.writeln('return list;');
     buffer.writeln('}');
 
@@ -489,9 +490,9 @@ _createDbFunctions(
   buffer.writeln(
       'List<Map<String,dynamic>> value= await DBProvider.getInstance().query(table,limit: limit,distinct:distinct ?? false,columns:columns,where:where,whereArgs:whereArgs,groupBy:groupBy,having:having,orderBy:orderBy,offset:offset);');
   buffer.writeln('List<${element.name}> data=[];');
-  buffer.writeln('value.forEach((map){');
+  buffer.writeln('for(var map in value){');
   buffer.writeln('data.add($generatedClassName.fromJson(map));');
-  buffer.writeln('});');
+  buffer.writeln('}');
   buffer.writeln('return data;');
   buffer.writeln('}');
   buffer.writeln('');
@@ -511,20 +512,20 @@ _createDbFunctions(
       'static Future<int> insertAll(String table,{List<${element.name}> models,List<dynamic> jsonList,String jsonStringList,String nullColumnHack, ConflictAlgorithm conflictAlgorithm=ConflictAlgorithm.ignore}) async { ');
   buffer.writeln('int inserted=0;');
   buffer.writeln('if(models!=null)');
-  buffer.writeln('models.forEach((model) async {');
+  buffer.writeln('for(var model in models) async {');
   buffer.writeln(
       ' int id= await insert(table,model:model,nullColumnHack:nullColumnHack,conflictAlgorithm:conflictAlgorithm);');
   buffer.writeln('if(id>0) ');
   buffer.writeln('++inserted; ');
-  buffer.writeln('}); ');
+  buffer.writeln('}');
   buffer.writeln('else {');//if(jsonList!=null?jsonList:JSON.json.decode(jsonStringList) as List<dynamic>)
   buffer.writeln("List<dynamic> list=jsonList!=null?jsonList:jsonStringList!=null && jsonStringList.isNotEmpty?JSON.json.decode(jsonStringList):[];");
-  buffer.writeln('list.forEach((model) async {');
+  buffer.writeln('for(var model in list) {');
   buffer.writeln(
       ' int id= await insert(table,jsonModel:model,nullColumnHack:nullColumnHack,conflictAlgorithm:conflictAlgorithm);');
   buffer.writeln('if(id>0) ');
   buffer.writeln('++inserted; ');
-  buffer.writeln('}); ');
+  buffer.writeln('} ');
   buffer.writeln('} ');
   buffer.writeln("return inserted;");
   buffer.writeln("}");
@@ -536,13 +537,13 @@ _createDbFunctions(
       'static Future<void> deleteAllTables({String where, List<dynamic> whereArgs,List<String> excludedTables=const []}) async { ');
   buffer.writeln("Batch _batch=DBProvider.getInstance().getBatch();");//BATCH
 
-  tables.forEach((dart) {
+  for(var dart in tables) {
 
     buffer.writeln('if(!excludedTables.contains("${dart.toStringValue().toLowerCase()}"))');
     buffer.writeln(
         '_batch.delete("${dart.toStringValue().toLowerCase()}",where:where,whereArgs:whereArgs);');
 
-  });
+  }
   buffer.writeln("await _batch.commit(noResult: true);");//BATCH COMMIT WITH AWAIT
    buffer.writeln('}');//END OF DELETE ALL
   buffer.writeln('');
@@ -562,12 +563,12 @@ _createDbFunctions(
       'static Future<int> deleteByColumn(String table,${element.name} model,List<String> columns,{String operator:" AND "}) async { ');
   buffer.writeln('String where="";');
   buffer.writeln('List<dynamic> whereArgs=[];');
-  buffer.writeln('columns.forEach((column){');
+  buffer.writeln('for(var column in columns){');
   buffer.writeln('if(where.length>0) where+=operator;');
   buffer.writeln('where+=" \$column=? ";');
   buffer.writeln(
       'whereArgs.add(${element.name}$CLASS_NAME_SUFFIX.get( model,column));');
-  buffer.writeln('});');
+  buffer.writeln('}');
   buffer.writeln(
       'return await delete(table,where:where,whereArgs:whereArgs);');
   buffer.writeln('}');
@@ -589,7 +590,7 @@ _createDbFunctions(
 
   if(annotation.read("needTableMethods").boolValue) {
     //LOOP START
-    tables.forEach((dart) {
+    for(var dart in tables) {
       String table = dart.toStringValue().toLowerCase();
       String tableToUpper = '${table[0].toUpperCase()}${table.substring(1)}';
 
@@ -664,7 +665,7 @@ _createDbFunctions(
           "return await update('$table',model,columns:columns,conflictAlgorithm:conflictAlgorithm,where:where,whereArgs:whereArgs);");
       buffer.writeln('}');
       buffer.writeln('');
-    }); //loop end
+    } //loop end
   }
 }
 
