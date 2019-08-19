@@ -25,7 +25,7 @@ class SfwDbField {
   final bool canNull;
 
 
-  const SfwDbField({this.name,this.isAnEntity=false,this.genericType,this.isUnique=false,this.canNull=true}) : assert(name != null && name != ''),assert(isAnEntity!=null),assert(isUnique!=null),assert(canNull!=null);
+  const SfwDbField(this.name,{this.isAnEntity=false,this.genericType,this.isUnique=false,this.canNull=true}) : assert(isAnEntity!=null),assert(isUnique!=null),assert(canNull!=null);
 }
 
 class SfwDbPrimary {
