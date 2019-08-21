@@ -16,10 +16,11 @@ StringBuffer _dbBuffer = StringBuffer();
 StringBuffer queryBuffer = StringBuffer();
 StringBuffer webQueryBuffer = StringBuffer();
 StringBuffer webConfigBuffer = StringBuffer();
-int filesFinished=0;
-int totalFileCount=-1;
-String dbName ;
-int dbVersion ;
+int filesFinished = 0;
+int totalFileCount = -1;
+String dbName;
+
+int dbVersion;
 
 //flutter packages pub run build_runner clean
 //flutter packages pub run build_runner build
@@ -29,9 +30,9 @@ class DbGenerator extends Generator {
 
   @override
   FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
-
     ++filesFinished;
-    log.warning("FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
+    log.warning(
+        "FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
     await XmlDocs.isStyleAsset(library, buildStep);
     await XmlDocs.isStringAsset(library, buildStep);
 //    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
@@ -69,23 +70,25 @@ class DbGenerator extends Generator {
       }
     }
 
-
     if (webConfigBuffer.isEmpty) {
       for (var annotatedElement
           in library.annotatedWith(TypeChecker.fromRuntime(SfwWebConfig))) {
         final String baseUrl =
             annotatedElement.annotation.read('baseUrl').stringValue;
         final bool debug = annotatedElement.annotation.read('debug').boolValue;
-        final String contentType=annotatedElement.annotation.read('contentType').stringValue;
+        final String contentType =
+            annotatedElement.annotation.read('contentType').stringValue;
 
         final String responseType =
             annotatedElement.annotation.read('responseType').stringValue;
-        final Map<String, String> header ={};
-        var entries=annotatedElement.annotation.read('header').mapValue.entries;
+        final Map<String, String> header = {};
+        var entries =
+            annotatedElement.annotation.read('header').mapValue.entries;
 
-            for(var entry in entries){
-              header["'${entry.key.toStringValue()}'"]="'${entry.value.toStringValue()}'";
-            }
+        for (var entry in entries) {
+          header["'${entry.key.toStringValue()}'"] =
+              "'${entry.value.toStringValue()}'";
+        }
 
         webConfigBuffer.clear();
         webConfigBuffer.writeln('class ${annotatedElement.element.name} {');
@@ -103,13 +106,11 @@ class DbGenerator extends Generator {
       }
     }
 
-    for (var annotatedElement
-        in library.annotatedWith(_jsonWebCallChecker)) {
+    for (var annotatedElement in library.annotatedWith(_jsonWebCallChecker)) {
       _generateWebCall(
           annotatedElement.element, annotatedElement.annotation, buildStep);
     }
-    if (totalFileCount>-1 &&
-        totalFileCount==filesFinished) {
+    if (totalFileCount > -1 && totalFileCount == filesFinished) {
       if (entityGenerator.error == null) {
         //_dbBuffer.write(entityGenerator.createStatements);
         entityGenerator.createStatements.writeln(
@@ -117,16 +118,17 @@ class DbGenerator extends Generator {
         entityGenerator.createStatements.writeln(
             "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
         entityGenerator.createStatements.writeln("_batch.delete('sfwMeta');");
-        for(var map in entityGenerator.tablesMetaData) {
-          entityGenerator.createStatements.writeln("_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
+        for (var map in entityGenerator.tablesMetaData) {
+          entityGenerator.createStatements.writeln(
+              "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
         }
 
-        createDb(_dbBuffer, buildStep, dbVersion, dbName, entityGenerator.createStatements.toString());
+        createDb(_dbBuffer, buildStep, dbVersion, dbName,
+            entityGenerator.createStatements.toString());
 
-        for(var buffer in _mainBuffer) {
+        for (var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
         }
-
 
         _dbBuffer.writeln("//FUNCTIONS DEFINITION");
 
@@ -138,10 +140,10 @@ class DbGenerator extends Generator {
             .contains('typedef DbErrorCallBack = void Function(String e);'))
           _dbBuffer
               .writeln('typedef DbErrorCallBack = void Function(String e);');
-        for(var s in entityGenerator.typeDefs) {
+        for (var s in entityGenerator.typeDefs) {
           _dbBuffer.writeln(s);
         }
-        if(webConfigBuffer.isNotEmpty) {
+        if (webConfigBuffer.isNotEmpty) {
           _dbBuffer.writeln("//WEBSERVICE");
           _dbBuffer.writeln(webConfigBuffer);
           _dbBuffer.writeln(webQueryBuffer);
@@ -149,19 +151,19 @@ class DbGenerator extends Generator {
         }
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
-        await loadAssets(queryBuffer,buildStep);
+        await loadAssets(queryBuffer, buildStep);
         //await XmlDocs.build(queryBuffer, buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
       StringBuffer s = StringBuffer();
       _imports.add("import 'package:intl/intl.dart' show DateFormat;");
       _imports.add("import 'package:sfw_imports/src/web.dart';");
-      if(webConfigBuffer.isNotEmpty) {
+      if (webConfigBuffer.isNotEmpty) {
         _imports.add("import 'package:dio/dio.dart';");
         _imports.add("import 'dart:io' show ContentType,ResponseType;");
       }
       if (entityGenerator.error == null) {
-        for(var import in _imports) {
+        for (var import in _imports) {
           s.write(import);
         }
       } else {
@@ -169,8 +171,6 @@ class DbGenerator extends Generator {
         _dbBuffer.clear();
         s.writeln(entityGenerator.error);
       }
-
-
 
       await for (var value in normalizeGeneratorOutput(
           s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
@@ -304,17 +304,19 @@ class DbGenerator extends Generator {
           ];
           List<String> userDefinedParams = [];
           StringBuffer params = StringBuffer();
-
-          for(var type in method.parameters) {//Write all parameters to the generated method
-            if(methodBuilder.length>0)
-            methodBuilder.write(", ");
+          int paramCount = 0;
+          for (var type in method.parameters) {
+            //Write all parameters to the generated method
+            if (paramCount > 0) methodBuilder.write(", ");
+            ++paramCount;
             methodBuilder.write('${type.type} ${type.name}');
             userDefinedParams.add("${type.name}");
           }
-          for(var queryParam in queryParams) {
+          for (var queryParam in queryParams) {
             if (queryParam == 'limit' && callbackType == '') continue;
-              params.write(',$queryParam: ');
-            if (userDefinedParams.contains(queryParam)) {//check is user specified the query key
+            params.write(',$queryParam: ');
+            if (userDefinedParams.contains(queryParam)) {
+              //check is user specified the query key
               params.write(queryParam);
             } else {
               switch (queryParam) {
@@ -427,40 +429,50 @@ class DbGenerator extends Generator {
 //    _dbBuffer.writeln("import 'dart:io';");
     _dbBuffer.writeln("import 'dart:convert' as JSON;");
     _dbBuffer.writeln("import 'dart:core';");
-   // _dbBuffer.writeln("import 'package:intl/intl.dart';");
+    // _dbBuffer.writeln("import 'package:intl/intl.dart';");
     _dbBuffer.writeln("import 'package:fluttertoast/fluttertoast.dart';");
     _dbBuffer.writeln("import 'package:flutter/cupertino.dart';");
-   // _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
-    _dbBuffer.writeln("import 'package:flutter_screenutil/flutter_screenutil.dart';");
-    _dbBuffer.writeln("import 'package:flutter/material.dart';");// show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle,StatefulWidget,State,Colors;");
-    for(var import in _imports) {
+    // _dbBuffer.writeln("import 'dart:ui' show Color,FontWeight,TextStyle,FontStyle,TextDecoration;");
+    _dbBuffer.writeln(
+        "import 'package:flutter_screenutil/flutter_screenutil.dart';");
+    _dbBuffer.writeln(
+        "import 'package:flutter/material.dart';"); // show VoidCallback,BuildContext,TextSpan,RichText,DefaultTextStyle,StatefulWidget,State,Colors;");
+    for (var import in _imports) {
       _dbBuffer.writeln(import);
     }
     return methodBuilder.toString();
   }
 
-  Future loadAssets(StringBuffer s,BuildStep buildStep) async {
-    s.writeln(await readAsset(AssetId("sfw_generator", "lib/src/assets/animation_helper.d"), buildStep));
-    s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/app_helper.d"), buildStep));
-        s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/error_remover.d"), buildStep));
-    s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
-    s.writeln(await readAsset( AssetId("sfw_generator", "lib/src/assets/sfw_html.d"), buildStep));
-
-
+  Future loadAssets(StringBuffer s, BuildStep buildStep) async {
+    s.writeln(await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/animation_helper.d"),
+        buildStep));
+    s.writeln(await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/app_helper.d"), buildStep));
+    s.writeln(await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/error_remover.d"), buildStep));
+    s.writeln(await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
+    s.writeln(await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/sfw_html.d"), buildStep));
   }
-  Future createDb(StringBuffer s,BuildStep buildStep,int dbVersion,String dbName,String dbTransaction) async {
-    String db=await readAsset( AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
-    db=db.replaceFirst("dbVersion", "$dbVersion").replaceFirst("dbName", dbName).replaceFirst("dbTransaction", dbTransaction);
+
+  Future createDb(StringBuffer s, BuildStep buildStep, int dbVersion,
+      String dbName, String dbTransaction) async {
+    String db = await readAsset(
+        AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
+    db = db
+        .replaceFirst("dbVersion", "$dbVersion")
+        .replaceFirst("dbName", dbName)
+        .replaceFirst("dbTransaction", dbTransaction);
     s.writeln(db);
   }
 
-  Future<String> readAsset(AssetId assetId,BuildStep buildStep) async {
+  Future<String> readAsset(AssetId assetId, BuildStep buildStep) async {
     try {
       return await buildStep.readAsString(assetId);
-    } catch(e){
+    } catch (e) {
       return e.toString();
     }
   }
-
-
 }
