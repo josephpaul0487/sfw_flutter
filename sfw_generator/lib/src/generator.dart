@@ -305,15 +305,16 @@ class DbGenerator extends Generator {
           List<String> userDefinedParams = [];
           StringBuffer params = StringBuffer();
 
-          for(var type in method.parameters) {
+          for(var type in method.parameters) {//Write all parameters to the generated method
+            if(methodBuilder.length>0)
             methodBuilder.write(", ");
             methodBuilder.write('${type.type} ${type.name}');
             userDefinedParams.add("${type.name}");
           }
           for(var queryParam in queryParams) {
             if (queryParam == 'limit' && callbackType == '') continue;
-            params.write(',$queryParam: ');
-            if (userDefinedParams.contains(queryParam)) {
+              params.write(',$queryParam: ');
+            if (userDefinedParams.contains(queryParam)) {//check is user specified the query key
               params.write(queryParam);
             } else {
               switch (queryParam) {

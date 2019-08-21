@@ -196,6 +196,8 @@ class _GeneratorHelper {
     //FIELDS
     int i = 0;
     // List<SfwDbField> dbFields=[];
+    String primaryFieldKey="id";
+    String primaryFieldName="id";
     //LOOP
     accessibleFields.forEach((str, e) {
       final annotationDbExclude = annotationForDbExclude(e);
@@ -211,6 +213,7 @@ class _GeneratorHelper {
       final annotation = annotationForDbName(e);
       final primaryAnnotation=annotationForDbPrimary(e);
       final isPrimary=primaryAnnotation!=null;
+
       bool isAnEntity = false;
       String genericType;
       bool isList=e.type.name == "List";
@@ -243,6 +246,10 @@ class _GeneratorHelper {
         genericType = annotation.getField("genericType").toTypeValue()?.name;
 
 
+      }
+      if(isPrimary) {
+        primaryFieldKey=dbFieldName;
+        primaryFieldName=e.name;
       }
       if(isList && (genericType==null || genericType=="")) {
         error =
@@ -487,7 +494,7 @@ class _GeneratorHelper {
     buffer.writeln(getter);
 
     //DB functions
-    _createDbFunctions(element, annotation, buffer);
+    _createDbFunctions(element, annotation, buffer,primaryFieldKey,primaryFieldName);
     //END OF DB functions
 
     buffer.writeln('}');
@@ -499,7 +506,7 @@ class _GeneratorHelper {
 }
 
 _createDbFunctions(
-    ClassElement element, ConstantReader annotation, StringBuffer buffer) {
+    ClassElement element, ConstantReader annotation, StringBuffer buffer,String primaryFieldDbKey,String primaryFieldName) {
 
   if(!annotation.read('isAnDbEntity').boolValue) {
     return;
@@ -611,8 +618,8 @@ _createDbFunctions(
   buffer.writeln(
       'static Future<int> update(String table,${element.name} model, {List<String> columns,String where, List<dynamic> whereArgs, ConflictAlgorithm conflictAlgorithm : ConflictAlgorithm.replace}) async { ');
   buffer.writeln("if(where==null || where.isEmpty) {");
-  buffer.writeln('where = "id=?";');
-  buffer.writeln('whereArgs=[model.id];');
+  buffer.writeln('where = "$primaryFieldDbKey=?";');
+  buffer.writeln('whereArgs=[model.$primaryFieldName];');
   buffer.writeln('}');
   buffer.writeln(
       'return await DBProvider.getInstance().update(table, ${element.name}SFW.toJson(model,table:table,columns: columns),conflictAlgorithm: conflictAlgorithm,whereArgs: whereArgs,where: where);');
