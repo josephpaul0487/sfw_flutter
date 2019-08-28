@@ -22,6 +22,7 @@ String dbName;
 
 int dbVersion;
 String dbClassImport;
+String dbOriginalClassName;
 
 //flutter packages pub run build_runner clean
 //flutter packages pub run build_runner build
@@ -67,6 +68,7 @@ class DbGenerator extends Generator {
         queryBuffer.writeln('class ${annotatedElement.element.name} {');
         queryBuffer.write(query);
         queryBuffer.writeln('}');
+        dbOriginalClassName=annotatedElement.element.name;
         dbClassImport="import ${library.element.source.fullName} show ${annotatedElement.element.name} as SfwConfigDb;";
         break;
       }
@@ -126,7 +128,7 @@ class DbGenerator extends Generator {
         }
 
         createDb(_dbBuffer, buildStep, dbVersion, dbName,
-            entityGenerator.createStatements.toString());
+            entityGenerator.createStatements.toString(),entityGenerator.tablesMetaData);
 
         for (var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
@@ -460,13 +462,13 @@ class DbGenerator extends Generator {
   }
 
   Future createDb(StringBuffer s, BuildStep buildStep, int dbVersion,
-      String dbName, String dbTransaction) async {
+      String dbName, String dbTransaction,List<String> tablesMetaData) async {
     String db = await readAsset(
         AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db = db
         .replaceFirst("dbVersion", "$dbVersion")
         .replaceFirst("dbName", dbName)
-        .replaceFirst("dbTransaction", dbTransaction);
+        .replaceFirst("dbTransaction", dbTransaction).replaceFirst("TABLE_DETAILS", '$tablesMetaData').replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
     s.writeln(db);
   }
 
