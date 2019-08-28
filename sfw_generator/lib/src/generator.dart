@@ -28,7 +28,6 @@ String dbOriginalClassName;
 //flutter packages pub run build_runner build
 //flutter packages pub run build_runner build --delete-conflicting-outputs
 class DbGenerator extends Generator {
-
   final _jsonWebCallChecker = TypeChecker.fromRuntime(SfwWebCall);
 
   @override
@@ -68,8 +67,9 @@ class DbGenerator extends Generator {
         queryBuffer.writeln('class ${annotatedElement.element.name} {');
         queryBuffer.write(query);
         queryBuffer.writeln('}');
-        dbOriginalClassName=annotatedElement.element.name;
-        dbClassImport="import ${library.element.source.fullName} show ${annotatedElement.element.name} as SfwConfigDb;";
+        dbOriginalClassName = annotatedElement.element.name;
+        dbClassImport =
+            "import ${library.element.source.fullName} as SfwConfigDb show ${annotatedElement.element.name};";
         break;
       }
     }
@@ -127,8 +127,13 @@ class DbGenerator extends Generator {
               "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
         }
 
-        createDb(_dbBuffer, buildStep, dbVersion, dbName,
-            entityGenerator.createStatements.toString(),entityGenerator.tablesMetaData);
+        createDb(
+            _dbBuffer,
+            buildStep,
+            dbVersion,
+            dbName,
+            entityGenerator.createStatements.toString(),
+            entityGenerator.tablesMetaData);
 
         for (var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
@@ -166,6 +171,7 @@ class DbGenerator extends Generator {
         _imports.add("import 'package:dio/dio.dart';");
         _imports.add("import 'dart:io' show ContentType,ResponseType;");
       }
+      if (dbClassImport != null) _imports.add(dbClassImport);
       if (entityGenerator.error == null) {
         for (var import in _imports) {
           s.write(import);
@@ -462,13 +468,15 @@ class DbGenerator extends Generator {
   }
 
   Future createDb(StringBuffer s, BuildStep buildStep, int dbVersion,
-      String dbName, String dbTransaction,List<String> tablesMetaData) async {
+      String dbName, String dbTransaction, List<String> tablesMetaData) async {
     String db = await readAsset(
         AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
     db = db
         .replaceFirst("dbVersion", "$dbVersion")
         .replaceFirst("dbName", dbName)
-        .replaceFirst("dbTransaction", dbTransaction).replaceFirst("TABLE_DETAILS", '$tablesMetaData').replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
+        .replaceFirst("dbTransaction", dbTransaction)
+        .replaceFirst("TABLE_DETAILS", '$tablesMetaData')
+        .replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
     s.writeln(db);
   }
 

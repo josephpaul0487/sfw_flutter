@@ -24,11 +24,11 @@ class DBProvider {
     String path = join(dbFolder, 'dbName');
     List<String> _tableDetails = TABLE_DETAILS;
     return await openDatabase(path, version: dbVersion, onOpen: (db) async {
-      await _callMethod(SFW_CONFIG_CLASS.onCreate, db, 0, 0,passVersion:false);
+      await SfwConfigDb.SFW_CONFIG_CLASS.onOpen(db);
     },
         onCreate: (Database db, int version) async {
           await _createDb(db, version);
-          await _callMethod(SFW_CONFIG_CLASS.onCreate, db, version, version,passNewVersion:false);
+          await SfwConfigDb.SFW_CONFIG_CLASS.onCreate( db, version);
         }, onUpgrade: (db, version, newVersion) async {
           List<Map<String, dynamic>> tables = await db.query("sfwMeta");
           for (final tableData in tables) {
@@ -37,7 +37,7 @@ class DBProvider {
             }
           }
           await _createDb(db, version);
-          await _callMethod(SFW_CONFIG_CLASS.onUpgrade, db, version, newVersion);
+          await SfwConfigDb.SFW_CONFIG_CLASS.onUpgrade( db, version, newVersion);
         },onDowngrade: (db, version, newVersion) async {
           List<Map<String, dynamic>> tables = await db.query("sfwMeta");
           for (final tableData in tables) {
@@ -46,23 +46,10 @@ class DBProvider {
             }
           }
           await _createDb(db, version);
-          await _callMethod(SFW_CONFIG_CLASS.onDowngrade, db, version, newVersion);
+          await SfwConfigDb.SFW_CONFIG_CLASS.onDowngrade( db, version, newVersion);
         });
   }
 
-  _callMethod(Function f, Database db, int oldVersion, int newVersion,{bool passNewVersion=true,bool passVersion=true}) async {
-    try {
-      if(passNewVersion && passVersion)
-        await f(db,oldVersion,newVersion);
-      else if(passVersion)
-        await f(db,oldVersion);
-      else
-        await f(db);
-    } catch (e) {
-      throw Exception(
-          "You should create following methods in your SFW_CONFIG_CLASS . 1.. Future onCreate(Database db, int version) async {}  2.. Future onUpgrade(Database db, int oldVersion, int newVersion) async{} 3.. Future onOpen(Database db) async {} 4.. Future onDowngrade(Database db, int oldVersion, int newVersion) async{}");
-    }
-  }
 
   _createDb(Database db, int version) async {
     Batch _batch = db.batch();
