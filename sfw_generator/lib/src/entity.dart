@@ -244,6 +244,9 @@ class _GeneratorHelper {
         isUnique = annotation.getField("isUnique").toBoolValue();
         canNull = annotation.getField("canNull").toBoolValue();
         genericType = annotation.getField("genericType").toTypeValue()?.name;
+        if(genericType==null && !isList && !isMap){
+          genericType=e.type.name;
+        }
 
 
       }
