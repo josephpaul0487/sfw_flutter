@@ -56,7 +56,7 @@ class DBProvider {
         await f(db,oldVersion,newVersion);
       else if(passVersion)
         await f(db,oldVersion);
-      else 
+      else
         await f(db);
     } catch (e) {
       throw Exception(
