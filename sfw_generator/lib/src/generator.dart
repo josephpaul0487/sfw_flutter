@@ -69,7 +69,7 @@ class DbGenerator extends Generator {
         queryBuffer.writeln('}');
         dbOriginalClassName = annotatedElement.element.name;
         dbClassImport =
-            "import ${library.element.source.uri} as SfwConfigDb show ${annotatedElement.element.name};";
+            "import '${library.element.source.uri}' as SfwConfigDb show ${annotatedElement.element.name};";
         break;
       }
     }
