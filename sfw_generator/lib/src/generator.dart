@@ -69,7 +69,7 @@ class DbGenerator extends Generator {
         queryBuffer.writeln('}');
         dbOriginalClassName = annotatedElement.element.name;
         dbClassImport =
-            "import ${library.element.source.fullName} as SfwConfigDb show ${annotatedElement.element.name};";
+            "import ${library.element.source.librarySource.fullName} as SfwConfigDb show ${annotatedElement.element.name};";
         break;
       }
     }
@@ -471,11 +471,15 @@ class DbGenerator extends Generator {
       String dbName, String dbTransaction, List<String> tablesMetaData) async {
     String db = await readAsset(
         AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
+   List<String> meta=[];
+   for(var c in tablesMetaData) {
+     meta.add("'$c'");
+   }
     db = db
         .replaceFirst("dbVersion", "$dbVersion")
         .replaceFirst("dbName", dbName)
         .replaceFirst("dbTransaction", dbTransaction)
-        .replaceFirst("TABLE_DETAILS", '$tablesMetaData')
+        .replaceFirst("TABLE_DETAILS", '$meta')
         .replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
     s.writeln(db);
   }
