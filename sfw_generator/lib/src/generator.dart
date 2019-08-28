@@ -21,11 +21,13 @@ int totalFileCount = -1;
 String dbName;
 
 int dbVersion;
+String dbClassImport;
 
 //flutter packages pub run build_runner clean
 //flutter packages pub run build_runner build
 //flutter packages pub run build_runner build --delete-conflicting-outputs
 class DbGenerator extends Generator {
+
   final _jsonWebCallChecker = TypeChecker.fromRuntime(SfwWebCall);
 
   @override
@@ -65,7 +67,7 @@ class DbGenerator extends Generator {
         queryBuffer.writeln('class ${annotatedElement.element.name} {');
         queryBuffer.write(query);
         queryBuffer.writeln('}');
-
+        dbClassImport="import ${library.element.source.fullName} show ${annotatedElement.element.name} as SfwConfigDb;";
         break;
       }
     }
