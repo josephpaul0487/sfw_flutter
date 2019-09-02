@@ -112,7 +112,7 @@ class XmlDocs {
               if(attr.name.local=="name")
                 key=attr.value;
               else {
-                attr.name.local=="type" && attr.value=="static";
+                isStatic=attr.name.local=="type" && attr.value=="static";
               }
 
             });
