@@ -57,6 +57,14 @@ class SfwHelper {
     }
   }
 
+  static String convertDateTime( String toFormat, DateTime date) {
+    try {
+      return DateFormat(toFormat).format(date);
+    } on FormatException {
+      return "";
+    }
+  }
+
   static String convertWebToLocalDate(String toFormat,String date,{String fromFormat="yyyy-MM-dd HH:mm:ss"}) {
     try {
       return DateFormat(toFormat).format( DateFormat(fromFormat).parse(date));

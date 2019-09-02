@@ -23,11 +23,13 @@ class XmlDocs {
           strings.writeln('class SfwStrings {');
           List<String> keys=[];
           StringBuffer generatedKeys=StringBuffer();
+          StringBuffer generatedStaticStrings=StringBuffer();
           StringBuffer code=StringBuffer();
           List<String> classNames=[];
           for(int i=1,j=0;j<stringFiles.length;++j) {
-            i=await _readStrings(stringFiles[j].toStringValue(), keys, generatedKeys, i, classNames, code, buildStep);
+            i=await _readStrings(stringFiles[j].toStringValue(), keys, generatedKeys,generatedStaticStrings, i, classNames, code, buildStep);
           }
+          strings.writeln(generatedStaticStrings);
           strings.writeln(generatedKeys);
           strings.writeln("static get(int code,{String locale='us'}) {");
           strings.writeln("switch('\$locale') {") ;
@@ -74,7 +76,7 @@ class XmlDocs {
     } catch (e) {}
   }
 
-  static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
+  static Future<int> _readStrings(String fileName,List<String> keys,StringBuffer  generatedKeys,StringBuffer generatedStaticStrings,int lastKeyValue,List<String> classNames,StringBuffer code,BuildStep buildStep) async {
     try {
       String className="";
       String appStrings = await readAsset(
@@ -99,19 +101,27 @@ class XmlDocs {
             String string = node.text;
             if(string.isEmpty)
               return;
-            if (string.startsWith("@")) {
+            if (string.startsWith("@string/")) {
               string = "get$classToUpper(${string.substring(string.indexOf("/") + 1)})";
             } else {
               string=" '$string'";
             }
             String key;
+            bool isStatic=false;
             node.attributes.forEach((attr) {
               if(attr.name.local=="name")
                 key=attr.value;
+              else {
+                attr.name.local=="type" && attr.value=="static";
+              }
 
             });
             if(key==null || key.isEmpty )
               return;
+            if(isStatic) {
+              generatedStaticStrings.writeln("static const String $key=$string;");
+              return;
+            }
             if(!keys.contains(key)) {
               keys.add(key);
               generatedKeys.writeln("static const int $key = $lastKeyValue;");
