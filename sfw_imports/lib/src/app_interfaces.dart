@@ -1,9 +1,11 @@
 
 
+import 'dart:async' show FutureOr;
+
 typedef OnClickCallback = void Function();
 typedef OnClickCallbackWithTag = void Function(Object tag);
-typedef OnClickCallbackWithTag2 = bool Function(Object tag);
-typedef OnClickCallback2 = bool Function();
+typedef OnClickCallbackWithTag2 = FutureOr<bool>  Function(Object tag);
+typedef OnClickCallback2 = FutureOr<bool>  Function();
 
 class OnClickListener {
   bool clicked = false;

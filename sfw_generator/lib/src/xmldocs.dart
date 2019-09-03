@@ -92,7 +92,7 @@ class XmlDocs {
         }
 
         String classToUpper=className.toLowerCase().replaceRange(0, 1, className.substring(0,1).toUpperCase());
-        code.writeln("static String get$classToUpper(int code,{String locale}) {");
+        code.writeln("static String get$classToUpper(int code) {");
         code.writeln("switch(code) {");
 
         List<String> keysLocal=[];
