@@ -7,7 +7,7 @@ packages:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.37.1"
+    version: "0.38.2"
   args:
     dependency: transitive
     description:
@@ -35,7 +35,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.6"
   charcode:
     dependency: transitive
     description:
@@ -70,7 +70,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1+1"
+    version: "2.1.2"
   csslib:
     dependency: transitive
     description:
@@ -91,7 +91,7 @@ packages:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.9"
+    version: "1.2.10"
   dio:
     dependency: transitive
     description:
@@ -122,7 +122,7 @@ packages:
       name: front_end
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.21"
+    version: "0.1.24"
   glob:
     dependency: transitive
     description:
@@ -150,7 +150,7 @@ packages:
       name: kernel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.21"
+    version: "0.3.24"
   logging:
     dependency: transitive
     description:
@@ -178,7 +178,7 @@ packages:
       name: package_config
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "1.1.0"
   path:
     dependency: transitive
     description:
@@ -240,7 +240,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "97d503ff3eeb792a9a496229666e767b1c9d4108"
+      resolved-ref: "5ce50f2abb6d5faf7f175ee8659eed11b399f607"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -249,7 +249,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "97d503ff3eeb792a9a496229666e767b1c9d4108"
+      resolved-ref: "5ce50f2abb6d5faf7f175ee8659eed11b399f607"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -264,7 +264,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.4+3"
+    version: "0.9.4+4"
   source_span:
     dependency: transitive
     description:
