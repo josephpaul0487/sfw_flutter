@@ -16,7 +16,7 @@ abstract class SfwState <T extends StatefulWidget> extends State<T> {
     return showToast;
   }
 
-  bool isEmpty(String str,{String toastMessage}) {
+  bool isEmpty(String str,[String toastMessage]}) {
     return this.toastMessage(str==null || str.trim().isEmpty ,toastMessage);
   }
 

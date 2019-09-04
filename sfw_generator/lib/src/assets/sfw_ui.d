@@ -1,32 +1,43 @@
 class SfwUi {
-  static bool hasPermission(PermissionGroup permission,
+  static Future<bool> hasPermission(PermissionGroup permission,
       [String toastMessage]) async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(permission);
-    if (permission == null || permission != PermissionStatus.granted) {
-      Map<PermissionGroup,
-          PermissionStatus> permissions = await PermissionHandler()
-          .requestPermissions([permission]);
-      if (permissions == null || permissions.length == 0 ||
-          !permissions.containsKey(permission) ||
-          permissions[permission] != PermissionStatus.granted) {
-        if (toastMessage != null && toastMessage.isNotEmpty)
-          WidgetHelper.showToast(toastMessage);
-        return false;
+
+    try {
+      PermissionStatus hasPermission =
+      await PermissionHandler().checkPermissionStatus(permission);
+      if (hasPermission == null || hasPermission != PermissionStatus.granted) {
+        Map<PermissionGroup, PermissionStatus> permissions =
+        await PermissionHandler().requestPermissions([permission]);
+        if (permissions == null ||
+            permissions.length == 0 ||
+            !permissions.containsKey(permission) ||
+            permissions[permission] != PermissionStatus.granted) {
+          if (toastMessage != null && toastMessage.isNotEmpty)
+            SfwUi.showToast(toastMessage);
+          return false;
+        }
       }
+    } catch (e) {
+      return false;
     }
     return true;
   }
 
-  static bool hasPermissions(List<PermissionGroup> permissions,
+  static Future<bool> hasPermissions(List<PermissionGroup> permissions,
       [List<String> toastMessages]) async {
-    bool isToastEmpty=toastMessages==null || toastMessages.isEmpty;
-    if(!isToastEmpty && permissions.length!=toastMessages.length) {
-      throw Exception("Either toastMessages is empty or toastMessages.length == permissions.length");
+    if(permissions==null)
+      return false;
+    if(permissions.isEmpty)
+      return true;
+    bool isToastEmpty = toastMessages == null || toastMessages.isEmpty;
+    if (!isToastEmpty && permissions.length != toastMessages.length) {
+      throw Exception(
+          "Either toastMessages is empty or toastMessages.length == permissions.length");
     }
 
-    for(int i=0;i<permissions.length;++i) {
-      if(!await hasPermission(permissions[i],isToastEmpty?null:toastMessages[i])) {
+    for (int i = 0; i < permissions.length; ++i) {
+      if (!await hasPermission(
+          permissions[i], isToastEmpty ? null : toastMessages[i])) {
         return false;
       }
     }

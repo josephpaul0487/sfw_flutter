@@ -167,6 +167,7 @@ class DbGenerator extends Generator {
       StringBuffer s = StringBuffer();
       _imports.add("import 'package:intl/intl.dart' show DateFormat;");
       _imports.add("import 'package:sfw_imports/src/web.dart';");
+      _imports.add("import 'package:permission_handler/permission_handler.dart';");
       if (webConfigBuffer.isNotEmpty) {
         _imports.add("import 'package:dio/dio.dart';");
         _imports.add("import 'dart:io' show ContentType,ResponseType;");
