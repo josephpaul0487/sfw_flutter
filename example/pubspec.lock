@@ -98,7 +98,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.13"
+    version: "2.1.16"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -110,7 +110,7 @@ packages:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -137,13 +137,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.0+2"
-  intl:
-    dependency: transitive
-    description:
-      name: intl
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.15.8"
   kernel:
     dependency: transitive
     description:
@@ -240,7 +233,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "5ce50f2abb6d5faf7f175ee8659eed11b399f607"
+      resolved-ref: f718dc5e00e088c9cd3dc53fca649200f5d05cf8
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -249,7 +242,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "5ce50f2abb6d5faf7f175ee8659eed11b399f607"
+      resolved-ref: f718dc5e00e088c9cd3dc53fca649200f5d05cf8
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
