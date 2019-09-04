@@ -154,7 +154,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.13"
+    version: "2.1.16"
   fixnum:
     dependency: transitive
     description:
@@ -173,7 +173,7 @@ packages:
       name: flutter_screenutil
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -234,7 +234,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.8"
+    version: "0.16.0"
   io:
     dependency: transitive
     description:
@@ -311,7 +311,7 @@ packages:
       name: node_preamble
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.6"
+    version: "1.4.7"
   package_config:
     dependency: transitive
     description:
@@ -387,7 +387,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: c37f77cb00145409aaaf801a61c8cc87e464d111
+      resolved-ref: "53828f924111f89bf8dc12d5e22a44878efa71bc"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
