@@ -308,7 +308,7 @@ class _GeneratorHelper {
 
           } else {
               if(isMap || (isList && (genericType=="int" || genericType=="String" || genericType=="double" || genericType=="bool" || genericType=="Map" || genericType=="List"))) {
-                decode='fromDatabase?JSON.json.decode(json["$dbFieldName"]):${isMap?'json["$dbFieldName"]':'List<$genericType>.from(json["$dbFieldName"])'}';
+                decode='fromDatabase?List<$genericType>.from(JSON.json.decode(json["$dbFieldName"])):${isMap?'json["$dbFieldName"]':'List<$genericType>.from(json["$dbFieldName"])'}';
                 encode = "toDatabase?JSON.json.encode(model.$str):${isMap?'model.$str':'List<$genericType>.from(model.$str)'}";
               } else {
                 String fieldName=e.name.replaceRange(0, 1, e.name.substring(0,1).toUpperCase());

@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-@SfwColors(tilCounter: "789898")
+
 class Colors {
 
 }

@@ -8,8 +8,8 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  flutter_screenutil: ^0.5.2
-  intl: ^0.15.2
+  flutter_screenutil: ^0.6.0
+  intl: ^0.16.0
   flutter:
     sdk: flutter
 
