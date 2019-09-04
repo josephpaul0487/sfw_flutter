@@ -1,4 +1,41 @@
 
+abstract class SfwNotifierListener {
+  void onSfwNotifierCalled(String key,dynamic data);
+}
+
+class SfwNotifier {
+  Map<SfwNotifierListener,Set<String>> _listeners={};
+  static SfwNotifier _notifier=SfwNotifier();
+  //Map<SfwNotifierListener,Set<String>> get listener=>_listeners;
+
+  static addListener(SfwNotifierListener listener,Set<String> keys) {
+    if(listener==null)
+      return;
+    Set<String> list=_notifier._listeners[listener];
+    if(list==null) {
+      list={};
+    }
+    if(keys!=null)
+      list.addAll(keys);
+    _notifier._listeners[listener]=list;
+  }
+
+  static removeListener(SfwNotifierListener listener) {
+    if(listener==null)
+      return;
+    _notifier._listeners.remove(listener);
+  }
+
+  static notify(String key,dynamic value) {
+    _notifier._listeners.forEach((listener,_keys){
+      if(_keys.isEmpty || _keys.contains(key)) {
+        listener.onSfwNotifierCalled(key, value);
+      }
+    });
+  }
+
+
+}
 
 class SfwHelper {
   static ScreenUtil util;
