@@ -195,9 +195,11 @@ class SfwHelper {
   static const String MM_dd_yyyy_KK_mm_ss__a = "MM-dd-yyyy KK:mm:ss a";
   static const String MM_dd_yyyy_KK_mm_ss_a = "MM-dd-yyyy KK:mm:ssa";
 
-  static initialize(BuildContext context) {
+  static initialize(BuildContext context,{double width = 1080,
+    double  height = 1920,
+    bool allowFontScaling = false}) {
     if (util == null || util.scaleWidth < 1) {
-      util = ScreenUtil();
+      util = ScreenUtil(width: width,height: height,allowFontScaling: allowFontScaling);
       util.init(context);
       screenHeight = ScreenUtil.screenHeightDp;
       screenHeightPx = ScreenUtil.screenHeight;
