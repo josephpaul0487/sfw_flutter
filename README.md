@@ -33,7 +33,8 @@ Simple database generator (private use only)
 
 
 ## Database Config
-* Annotate a class using @SfwDbConfig("dbname",6,version:8)
+     
+    * Annotate a class using @SfwDbConfig("dbname",6,version:8)
 
     name, totalDartFileCount, version
 
@@ -49,7 +50,7 @@ Simple database generator (private use only)
 
     * You can use SfwDbQuery to generate query functions
 
-    import 'package:sfw_imports/sfw_imports.dart' show SfwDbConfig,SfwDbQuery;
+    @import 'package:sfw_imports/sfw_imports.dart' show SfwDbConfig,SfwDbQuery;
     @SfwDbConfig("quizup",6,version:3)
     abstract class DB {
         static onOpen(db) {}
