@@ -1,5 +1,7 @@
 targets:
   $default:
+    sources:
+      - "node/**"
     builders:
       sfw_generator|entities:
         enabled: true
