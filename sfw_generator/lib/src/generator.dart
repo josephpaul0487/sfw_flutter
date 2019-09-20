@@ -33,168 +33,170 @@ class DbGenerator extends Generator {
   @override
   FutureOr<String> generate(LibraryReader library, BuildStep buildStep) async {
     ++filesFinished;
-    log.warning(
-        "FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
-    await XmlDocs.isStyleAsset(library, buildStep);
-    await XmlDocs.isStringAsset(library, buildStep);
-//    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
-//      return "";
-
-    final values = Set<String>();
-    entityGenerator.EntitiesGenerator entities =
-        entityGenerator.EntitiesGenerator();
-    for (var annotatedElement
-        in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
-      entities.generateForAnnotatedElement(
-          annotatedElement.element, annotatedElement.annotation, buildStep);
-    }
-
-    _imports.addAll(entityGenerator.imports);
-
-    _mainBuffer.addAll(entityGenerator.mainBuffer);
-    entityGenerator.imports.clear();
-    entityGenerator.mainBuffer.clear();
-    if (totalFileCount == -1) {
-      for (var annotatedElement
-          in library.annotatedWith(TypeChecker.fromRuntime(SfwDbConfig))) {
-        String query = generateForAnnotatedElement(
-            annotatedElement.element, annotatedElement.annotation, buildStep);
-
-        totalFileCount =
-            annotatedElement.annotation.read('totalFileCount').intValue;
-
-        queryBuffer.clear();
-        queryBuffer.writeln('class ${annotatedElement.element.name} {');
-        queryBuffer.write(query);
-        queryBuffer.writeln('}');
-        dbOriginalClassName = annotatedElement.element.name;
-        dbClassImport =
-            "import '${library.element.source.uri}' as SfwConfigDb show ${annotatedElement.element.name};";
-        break;
-      }
-    }
-
-    if (webConfigBuffer.isEmpty) {
-      for (var annotatedElement
-          in library.annotatedWith(TypeChecker.fromRuntime(SfwWebConfig))) {
-        final String baseUrl =
-            annotatedElement.annotation.read('baseUrl').stringValue;
-        final bool debug = annotatedElement.annotation.read('debug').boolValue;
-        final String contentType =
-            annotatedElement.annotation.read('contentType').stringValue;
-
-        final String responseType =
-            annotatedElement.annotation.read('responseType').stringValue;
-        final Map<String, String> header = {};
-        var entries =
-            annotatedElement.annotation.read('header').mapValue.entries;
-
-        for (var entry in entries) {
-          header["'${entry.key.toStringValue()}'"] =
-              "'${entry.value.toStringValue()}'";
-        }
-
-        webConfigBuffer.clear();
-        webConfigBuffer.writeln('class ${annotatedElement.element.name} {');
-
-        webConfigBuffer.writeln(
-            'static final ContentType contentType=ContentType.$contentType;');
-        webConfigBuffer.writeln(
-            'static final ResponseType responseType=ResponseType.$responseType;');
-        webConfigBuffer
-            .writeln('static const  Map<String, dynamic> header=$header;');
-        webConfigBuffer.writeln('static const  String baseUrl="$baseUrl";');
-        webConfigBuffer.writeln('static bool debug=$debug;');
-
-        break;
-      }
-    }
-
-    for (var annotatedElement in library.annotatedWith(_jsonWebCallChecker)) {
-      _generateWebCall(
-          annotatedElement.element, annotatedElement.annotation, buildStep);
-    }
-    if (totalFileCount > -1 && totalFileCount == filesFinished) {
-      if (entityGenerator.error == null) {
-        //_dbBuffer.write(entityGenerator.createStatements);
-        entityGenerator.createStatements.writeln(
-            "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
-        entityGenerator.createStatements.writeln(
-            "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
-        entityGenerator.createStatements.writeln("_batch.delete('sfwMeta');");
-        for (var map in entityGenerator.tablesMetaData) {
-          entityGenerator.createStatements.writeln(
-              "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
-        }
-
-        createDb(
-            _dbBuffer,
-            buildStep,
-            dbVersion,
-            dbName,
-            entityGenerator.createStatements.toString(),
-            entityGenerator.tablesMetaData);
-
-        for (var buffer in _mainBuffer) {
-          _dbBuffer.write(buffer);
-        }
-
-        _dbBuffer.writeln("//FUNCTIONS DEFINITION");
-
-        //FUNCTIONS DEFINITION
-        if (!entityGenerator.typeDefs
-            .contains('typedef IntCallBack = void Function(int value);'))
-          _dbBuffer.writeln('typedef IntCallBack = void Function(int value);');
-        if (!entityGenerator.typeDefs
-            .contains('typedef DbErrorCallBack = void Function(String e);'))
-          _dbBuffer
-              .writeln('typedef DbErrorCallBack = void Function(String e);');
-        for (var s in entityGenerator.typeDefs) {
-          _dbBuffer.writeln(s);
-        }
-        if (webConfigBuffer.isNotEmpty) {
-          _dbBuffer.writeln("//WEBSERVICE");
-          _dbBuffer.writeln(webConfigBuffer);
-          _dbBuffer.writeln(webQueryBuffer);
-          _dbBuffer.writeln("}");
-        }
-        entityGenerator.typeDefs.clear();
-        queryBuffer.writeln('');
-        await loadAssets(queryBuffer, buildStep);
-        //await XmlDocs.build(queryBuffer, buildStep);
-        queryBuffer.writeln('//CODE GENERATION COMPLETED');
-      }
-      StringBuffer s = StringBuffer();
-      _imports.add("import 'package:intl/intl.dart' show DateFormat;");
-      _imports.add("import 'package:sfw_imports/src/web.dart';");
-      _imports.add("import 'package:permission_handler/permission_handler.dart';");
-      if (webConfigBuffer.isNotEmpty) {
-        _imports.add("import 'package:dio/dio.dart';");
-        _imports.add("import 'dart:io' show ContentType,ResponseType;");
-      }
-      if (dbClassImport != null) _imports.add(dbClassImport);
-      if (entityGenerator.error == null) {
-        for (var import in _imports) {
-          s.write(import);
-        }
-      } else {
-        queryBuffer.clear();
-        _dbBuffer.clear();
-        s.writeln(entityGenerator.error);
-      }
-
-      await for (var value in normalizeGeneratorOutput(
-          s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
-        assert(value == null || (value.length == value.trim().length));
-        values.add(value);
-      }
-      _mainBuffer.clear();
-      _imports.clear();
-      _dbBuffer.clear();
-      entityGenerator.createStatements.clear();
-    }
-
-    return values.join('\n\n');
+    log.warning("finishedFileCount = $filesFinished");
+//    log.warning(
+//        "FILE :  ${library.element.source.shortName}  finishedFileCount = $filesFinished");
+//    await XmlDocs.isStyleAsset(library, buildStep);
+//    await XmlDocs.isStringAsset(library, buildStep);
+////    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
+////      return "";
+//
+//    final values = Set<String>();
+//    entityGenerator.EntitiesGenerator entities =
+//        entityGenerator.EntitiesGenerator();
+//    for (var annotatedElement
+//        in library.annotatedWith(TypeChecker.fromRuntime(SfwEntity))) {
+//      entities.generateForAnnotatedElement(
+//          annotatedElement.element, annotatedElement.annotation, buildStep);
+//    }
+//
+//    _imports.addAll(entityGenerator.imports);
+//
+//    _mainBuffer.addAll(entityGenerator.mainBuffer);
+//    entityGenerator.imports.clear();
+//    entityGenerator.mainBuffer.clear();
+//    if (totalFileCount == -1) {
+//      for (var annotatedElement
+//          in library.annotatedWith(TypeChecker.fromRuntime(SfwDbConfig))) {
+//        String query = generateForAnnotatedElement(
+//            annotatedElement.element, annotatedElement.annotation, buildStep);
+//
+//        totalFileCount =
+//            annotatedElement.annotation.read('totalFileCount').intValue;
+//
+//        queryBuffer.clear();
+//        queryBuffer.writeln('class ${annotatedElement.element.name} {');
+//        queryBuffer.write(query);
+//        queryBuffer.writeln('}');
+//        dbOriginalClassName = annotatedElement.element.name;
+//        dbClassImport =
+//            "import '${library.element.source.uri}' as SfwConfigDb show ${annotatedElement.element.name};";
+//        break;
+//      }
+//    }
+//
+//    if (webConfigBuffer.isEmpty) {
+//      for (var annotatedElement
+//          in library.annotatedWith(TypeChecker.fromRuntime(SfwWebConfig))) {
+//        final String baseUrl =
+//            annotatedElement.annotation.read('baseUrl').stringValue;
+//        final bool debug = annotatedElement.annotation.read('debug').boolValue;
+//        final String contentType =
+//            annotatedElement.annotation.read('contentType').stringValue;
+//
+//        final String responseType =
+//            annotatedElement.annotation.read('responseType').stringValue;
+//        final Map<String, String> header = {};
+//        var entries =
+//            annotatedElement.annotation.read('header').mapValue.entries;
+//
+//        for (var entry in entries) {
+//          header["'${entry.key.toStringValue()}'"] =
+//              "'${entry.value.toStringValue()}'";
+//        }
+//
+//        webConfigBuffer.clear();
+//        webConfigBuffer.writeln('class ${annotatedElement.element.name} {');
+//
+//        webConfigBuffer.writeln(
+//            'static final ContentType contentType=ContentType.$contentType;');
+//        webConfigBuffer.writeln(
+//            'static final ResponseType responseType=ResponseType.$responseType;');
+//        webConfigBuffer
+//            .writeln('static const  Map<String, dynamic> header=$header;');
+//        webConfigBuffer.writeln('static const  String baseUrl="$baseUrl";');
+//        webConfigBuffer.writeln('static bool debug=$debug;');
+//
+//        break;
+//      }
+//    }
+//
+//    for (var annotatedElement in library.annotatedWith(_jsonWebCallChecker)) {
+//      _generateWebCall(
+//          annotatedElement.element, annotatedElement.annotation, buildStep);
+//    }
+//    if (totalFileCount > -1 && totalFileCount == filesFinished) {
+//      if (entityGenerator.error == null) {
+//        //_dbBuffer.write(entityGenerator.createStatements);
+//        entityGenerator.createStatements.writeln(
+//            "String createdAt=DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());");
+//        entityGenerator.createStatements.writeln(
+//            "_batch.execute('CREATE TABLE IF NOT EXISTS sfwMeta (id INTEGER PRIMARY KEY,sfwKey TEXT, sfwValue TEXT,createdAt TEXT,  updatedAt TEXT, type TEXT, fundCode TEXT)');");
+//        entityGenerator.createStatements.writeln("_batch.delete('sfwMeta');");
+//        for (var map in entityGenerator.tablesMetaData) {
+//          entityGenerator.createStatements.writeln(
+//              "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
+//        }
+//
+//        createDb(
+//            _dbBuffer,
+//            buildStep,
+//            dbVersion,
+//            dbName,
+//            entityGenerator.createStatements.toString(),
+//            entityGenerator.tablesMetaData);
+//
+//        for (var buffer in _mainBuffer) {
+//          _dbBuffer.write(buffer);
+//        }
+//
+//        _dbBuffer.writeln("//FUNCTIONS DEFINITION");
+//
+//        //FUNCTIONS DEFINITION
+//        if (!entityGenerator.typeDefs
+//            .contains('typedef IntCallBack = void Function(int value);'))
+//          _dbBuffer.writeln('typedef IntCallBack = void Function(int value);');
+//        if (!entityGenerator.typeDefs
+//            .contains('typedef DbErrorCallBack = void Function(String e);'))
+//          _dbBuffer
+//              .writeln('typedef DbErrorCallBack = void Function(String e);');
+//        for (var s in entityGenerator.typeDefs) {
+//          _dbBuffer.writeln(s);
+//        }
+//        if (webConfigBuffer.isNotEmpty) {
+//          _dbBuffer.writeln("//WEBSERVICE");
+//          _dbBuffer.writeln(webConfigBuffer);
+//          _dbBuffer.writeln(webQueryBuffer);
+//          _dbBuffer.writeln("}");
+//        }
+//        entityGenerator.typeDefs.clear();
+//        queryBuffer.writeln('');
+//        await loadAssets(queryBuffer, buildStep);
+//        //await XmlDocs.build(queryBuffer, buildStep);
+//        queryBuffer.writeln('//CODE GENERATION COMPLETED');
+//      }
+//      StringBuffer s = StringBuffer();
+//      _imports.add("import 'package:intl/intl.dart' show DateFormat;");
+//      _imports.add("import 'package:sfw_imports/src/web.dart';");
+//      _imports.add("import 'package:permission_handler/permission_handler.dart';");
+//      if (webConfigBuffer.isNotEmpty) {
+//        _imports.add("import 'package:dio/dio.dart';");
+//        _imports.add("import 'dart:io' show ContentType,ResponseType;");
+//      }
+//      if (dbClassImport != null) _imports.add(dbClassImport);
+//      if (entityGenerator.error == null) {
+//        for (var import in _imports) {
+//          s.write(import);
+//        }
+//      } else {
+//        queryBuffer.clear();
+//        _dbBuffer.clear();
+//        s.writeln(entityGenerator.error);
+//      }
+//
+//      await for (var value in normalizeGeneratorOutput(
+//          s.toString() + _dbBuffer.toString() + queryBuffer.toString())) {
+//        assert(value == null || (value.length == value.trim().length));
+//        values.add(value);
+//      }
+//      _mainBuffer.clear();
+//      _imports.clear();
+//      _dbBuffer.clear();
+//      entityGenerator.createStatements.clear();
+//    }
+//
+//    return values.join('\n\n');
+  return "" ;
   }
 
   _generateWebCall(
