@@ -10,7 +10,6 @@ environment:
 dependencies:
   build: ^1.1.6
   source_gen: ^0.9.4+4
-  dio: ^2.1.16
   xml: ^3.5.0
   scratch_space: ^0.0.4
   sfw_imports:
