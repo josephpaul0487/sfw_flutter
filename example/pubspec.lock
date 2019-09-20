@@ -219,7 +219,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "7fa53581dad3e66dee899d2cb4dcbccc4c0df0c0"
+      resolved-ref: "3570937e1c644b4d919cfb8046b461b8df977676"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -228,7 +228,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "7fa53581dad3e66dee899d2cb4dcbccc4c0df0c0"
+      resolved-ref: "3570937e1c644b4d919cfb8046b461b8df977676"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"

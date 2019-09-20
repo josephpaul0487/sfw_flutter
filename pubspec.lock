@@ -63,14 +63,14 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.6.7"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "3.1.1"
   built_collection:
     dependency: transitive
     description:
@@ -366,7 +366,7 @@ packages:
     description:
       path: sfw_generator
       ref: HEAD
-      resolved-ref: "7fa53581dad3e66dee899d2cb4dcbccc4c0df0c0"
+      resolved-ref: "3570937e1c644b4d919cfb8046b461b8df977676"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
@@ -375,7 +375,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: "7fa53581dad3e66dee899d2cb4dcbccc4c0df0c0"
+      resolved-ref: "3570937e1c644b4d919cfb8046b461b8df977676"
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
