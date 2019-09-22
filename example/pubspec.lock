@@ -35,7 +35,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.6"
+    version: "1.2.0"
   charcode:
     dependency: transitive
     description:
@@ -217,20 +217,16 @@ packages:
   sfw_generator:
     dependency: transitive
     description:
-      path: sfw_generator
-      ref: HEAD
-      resolved-ref: "51eea1ff0c0693d754ba56b1348370b82b22b975"
-      url: "git://github.com/josephpaul0487/sfw_flutter.git"
-    source: git
+      path: "../sfw_generator"
+      relative: true
+    source: path
     version: "0.0.1"
   sfw_imports:
     dependency: transitive
     description:
-      path: sfw_imports
-      ref: HEAD
-      resolved-ref: "51eea1ff0c0693d754ba56b1348370b82b22b975"
-      url: "git://github.com/josephpaul0487/sfw_flutter.git"
-    source: git
+      path: "../sfw_imports"
+      relative: true
+    source: path
     version: "0.0.1"
   sky_engine:
     dependency: transitive
