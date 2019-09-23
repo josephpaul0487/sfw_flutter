@@ -213,11 +213,11 @@ class XmlDocs {
       if (appDimens.isNotEmpty) {
         s.writeln('///CONSTANTS   --  String , bool , int , double');
         s.writeln('class SfwConstants {');
-//        xml.XmlDocument document = xml.parse(appDimens);
-//        _nodeToConstant("String", s, document.findAllElements("string"), buildStep);
-//        _nodeToConstant("bool", s, document.findAllElements("bool"), buildStep);
-//        _nodeToConstant("int", s, document.findAllElements("int"), buildStep);
-//        _nodeToConstant("double", s, document.findAllElements("double"), buildStep);
+        xml.XmlDocument document = xml.parse(appDimens);
+        _nodeToConstant("String", s, document.findAllElements("string"), buildStep);
+        _nodeToConstant("bool", s, document.findAllElements("bool"), buildStep);
+        _nodeToConstant("int", s, document.findAllElements("int"), buildStep);
+        _nodeToConstant("double", s, document.findAllElements("double"), buildStep);
         /*for (final child in document.children) {
 //        document.children.forEach((child) {
 //          child.children.forEach((node) {
@@ -254,7 +254,7 @@ class XmlDocs {
     }
   }
 
-  static _nodeToConstant(String type,StringBuffer s, List<xml.XmlElement> children, BuildStep buildStep) {
+  static _nodeToConstant(String type,StringBuffer s, Iterable<xml.XmlElement> children, BuildStep buildStep) {
 
       for (final node in children) {
         if (node.nodeType != xml.XmlNodeType.ELEMENT) {
