@@ -218,34 +218,7 @@ class XmlDocs {
         _nodeToConstant("bool", s, document.findAllElements("bool"), buildStep);
         _nodeToConstant("int", s, document.findAllElements("int"), buildStep);
         _nodeToConstant("double", s, document.findAllElements("double"), buildStep);
-        /*for (final child in document.children) {
-//        document.children.forEach((child) {
-//          child.children.forEach((node) {
-          for (final node in child.children) {
-            if (node.nodeType != xml.XmlNodeType.ELEMENT) {
-              continue;
-            }
-            String dimenCode = node.text;
-            if (dimenCode.isEmpty) return;
-            if (dimenCode.startsWith("@")) {
-              dimenCode = dimenCode.substring(dimenCode.indexOf("/") + 1);
-            }
-            String key, type;
-            node.attributes.forEach((attr) {
-              if (attr.name.local == "type")
-                type = attr.value;
-              else if (attr.name.local == "name") key = attr.value;
-            });
-            if (key == null || key.isEmpty) return;
-            if (type != null && type.toLowerCase() == "string")
-              s.writeln("static const String $key = '$dimenCode';");
-            else
-              s.writeln(
-                  "static const ${type == null ? 'double' : type} $key = $dimenCode;");
-          }
-          //);
-        }*/
-        //);
+
         s.writeln("}");
       }
     } catch (e) {
@@ -280,9 +253,15 @@ class XmlDocs {
 
   static String _parseColor(String colorCode) {
     if (colorCode.startsWith("#")) {
-      return colorCode.length == 9
-          ? "Color(0x${colorCode.substring(1)})"
-          : "Color(0xFF${colorCode.substring(1)})";
+      if(colorCode.length==9) {
+        return "Color(0x${colorCode.substring(1)})";
+      }
+      if(colorCode.length==7) {
+        return "Color(0xFF${colorCode.substring(1)})";
+      }
+      if(colorCode.length==4) {
+        return "Color(0xFF${_parse3colorCode(colorCode.substring(1))})";
+      }
     } else if (colorCode.startsWith("@")) {
       if (colorCode.startsWith("@flutter:color"))
         return 'Colors.${colorCode.substring(colorCode.indexOf("/") + 1)}';
@@ -303,8 +282,17 @@ class XmlDocs {
       return "Color(0xFF$colorCode)";
     } else if (colorCode.length == 8) {
       return "Color(0x$colorCode)";
+    } else if (colorCode.length == 3) {
+      return "Color(0x${_parse3colorCode(colorCode)}";
     }
     return null;
+  }
+
+  static _parse3colorCode(String code) {
+    if(code!=null && code.length==3) {
+      return code[0]+code[0]+code[1]+code[1]+code[2]+code[2];
+    }
+    return code;
   }
 
   static fromRGBO(String r, String g, String b, double opacity) =>
