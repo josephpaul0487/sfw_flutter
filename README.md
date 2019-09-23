@@ -24,6 +24,7 @@ Simple database generator (private use only)
           fluttertoast: ^3.1.2
           dio: ^2.1.16
           intl: ^0.16.0
+          analyzer: '0.38.2'
 
         dev_dependencies:
           build_runner: ^1.6.7

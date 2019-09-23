@@ -184,8 +184,10 @@ class XmlDocs {
         s.writeln('///COLORS');
         s.writeln('class SfwColors {');
         xml.XmlDocument document = xml.parse(appColors);
-        document.children.forEach((child) {
-          child.children.forEach((node) {
+       // document.children.forEach((child) {
+//          child.children.forEach((node) {
+          document.findAllElements("color").forEach((node) {
+
             String colorCode = _parseColor(node.text);
             if (colorCode == null) return;
 
@@ -194,7 +196,7 @@ class XmlDocs {
                 s.writeln("static const Color ${attr.value} = $colorCode;");
             });
           });
-        });
+        //});
         s.writeln("}");
       }
     } catch (e) {
@@ -212,7 +214,11 @@ class XmlDocs {
         s.writeln('///CONSTANTS   --  String , bool , int , double');
         s.writeln('class SfwConstants {');
         xml.XmlDocument document = xml.parse(appDimens);
-        for (final child in document.children) {
+        _nodeToConstant("String", s, document.findAllElements("string"), buildStep);
+        _nodeToConstant("bool", s, document.findAllElements("bool"), buildStep);
+        _nodeToConstant("int", s, document.findAllElements("int"), buildStep);
+        _nodeToConstant("double", s, document.findAllElements("double"), buildStep);
+        /*for (final child in document.children) {
 //        document.children.forEach((child) {
 //          child.children.forEach((node) {
           for (final node in child.children) {
@@ -238,7 +244,7 @@ class XmlDocs {
                   "static const ${type == null ? 'double' : type} $key = $dimenCode;");
           }
           //);
-        }
+        }*/
         //);
         s.writeln("}");
       }
@@ -246,6 +252,30 @@ class XmlDocs {
       s.writeln("/*${e.toString()}*/");
       s.writeln("}");
     }
+  }
+
+  static _nodeToConstant(String type,StringBuffer s, List<xml.XmlElement> children, BuildStep buildStep) {
+
+      for (final node in children) {
+        if (node.nodeType != xml.XmlNodeType.ELEMENT) {
+          continue;
+        }
+        String dimenCode = node.text;
+        if (dimenCode.isEmpty) return;
+        if (dimenCode.startsWith("@")) {
+          dimenCode = dimenCode.substring(dimenCode.indexOf("/") + 1);
+        }
+        String key;
+        node.attributes.forEach((attr) {
+          if (attr.name.local == "name") key = attr.value;
+        });
+        if (key == null || key.isEmpty) return;
+        if (type != null && type.toLowerCase() == "string")
+          s.writeln("static const String $key = '$dimenCode';");
+        else
+          s.writeln(
+              "static const ${type == null ? 'double' : type} $key = $dimenCode;");
+      }
   }
 
   static String _parseColor(String colorCode) {
