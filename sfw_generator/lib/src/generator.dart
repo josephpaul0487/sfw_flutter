@@ -471,10 +471,6 @@ class DbGenerator extends Generator {
           buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
           await readAsset(
               AssetId("sfw_generator", "lib/src/assets/app_helper.d"),
-              buildStep)+
-
-          await readAsset(
-              AssetId("sfw_generator", "lib/src/assets/error_remover.d"),
               buildStep));
     } else if (library.element.source.shortName == "ui.dart") {
       buildStep.writeAsString(AssetId(buildStep.inputId.package,
@@ -482,9 +478,11 @@ class DbGenerator extends Generator {
           await readAsset(
               AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
     } else if (library.element.source.shortName == "ui_helper.dart") {
+      String _imports="import 'package:flutter/material.dart';"
+      '';
       buildStep.writeAsString(AssetId(buildStep.inputId.package,
           buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-          await readAsset(
+          _imports + await readAsset(
               AssetId("sfw_generator", "lib/src/assets/sfw_html.d"),
               buildStep));
     }

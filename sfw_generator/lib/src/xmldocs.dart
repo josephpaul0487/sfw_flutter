@@ -71,11 +71,16 @@ class XmlDocs {
       if (styles.length > 0) {
         StringBuffer imports = StringBuffer();
         imports.writeln(
-            "import 'package:flutter/material.dart' show Color,MaterialColor,Colors;");
+            "import 'package:flutter/material.dart' show MaterialColor,TextStyle,FontWeight,FontStyle,Color,Colors,ThemeData,BorderRadius,Radius,OutlineInputBorder,UnderlineInputBorder,BorderSide,InputBorder,TextTheme;");
+        imports.writeln("import 'sfw.sfw.dart';");
+        styles.writeln(await readAsset(
+            AssetId("sfw_generator", "lib/src/assets/app_style.d"),
+            buildStep));
+
         buildStep.writeAsString(
             AssetId(buildStep.inputId.package,
                 buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-            await normalize(imports.toString() + styles.toString()));
+            await normalize(imports.toString() +  styles.toString()));
       }
       return true;
     }
