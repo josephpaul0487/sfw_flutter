@@ -565,7 +565,7 @@ class _ProgressButtonState extends State<ProgressButton> {
       case ProgressButtonStates.success:
         return Icon(Icons.check, color: Colors.red);
       default:
-        return UiHelper.button(_model.text, () async {
+        return SfwUiHelper.button(_model.text, () async {
           setState(() {
             _model.state = ProgressButtonStates.progress;
           });
@@ -820,7 +820,7 @@ class _SfwTextInputState extends State<SfwTextInput> {
               size: SfwHelper.pxToDp(_iconSize),
               color: iconColor,
             )
-                : UiHelper.circleWidget(
+                : SfwUiHelper.circleWidget(
                 Icon(
                   widget.til.icons.icon.icon,
                   size: SfwHelper.pxToDp(_iconSize),
@@ -847,7 +847,7 @@ class _SfwTextInputState extends State<SfwTextInput> {
                 _iconRightMargin == null || _iconRightMargin < 0
                     ? 0
                     : _iconRightMargin)),
-        child: UiHelper.til(
+        child: SfwUiHelper.til(
           til: SfwTil(
             textsRelated: widget.til.textsRelated,
             styles: widget.til.styles,
@@ -930,7 +930,7 @@ class _SfwTextInputState extends State<SfwTextInput> {
                 size: SfwHelper.pxToDp(_prefixIconSize),
                 color: iconColor,
               )
-                  : UiHelper.circleWidget(
+                  : SfwUiHelper.circleWidget(
                   Icon(
                     widget.til.icons.prefixIcon.icon,
                     size: SfwHelper.pxToDp(_prefixIconSize),
@@ -965,7 +965,7 @@ class _SfwTextInputState extends State<SfwTextInput> {
             child: widget.til.icons.suffixIcon.widget != null
                 ? widget.til.icons.suffixIcon.widget
                 : widget.til.icons.suffixIcon.onPressed != null
-                ? UiHelper.circleWidget(
+                ? SfwUiHelper.circleWidget(
                 Icon(
                   widget.til.icons.suffixIcon.icon,
                   color: iconColor,
@@ -1187,7 +1187,7 @@ class AppUi {
     List<PopupMenuEntry<int>> menu = [];
     for (int i = 0; i < list.length; ++i)
       menu.add(PopupMenuItem(
-        child: UiHelper.commonText(
+        child: SfwUiHelper.commonText(
           list[i],
         ),
         value: i,
