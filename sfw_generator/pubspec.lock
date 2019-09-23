@@ -191,7 +191,7 @@ packages:
     description:
       path: sfw_imports
       ref: HEAD
-      resolved-ref: a9785fc453d9761a260bebe63f4e59226b519387
+      resolved-ref: f2f139756ef32f2fcc9b20b45bd8363da386238c
       url: "git://github.com/josephpaul0487/sfw_flutter.git"
     source: git
     version: "0.0.1"
