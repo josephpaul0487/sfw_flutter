@@ -132,15 +132,15 @@ class DbGenerator extends Generator {
               "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
         }
 
-        log.warning("DBBB=${_dbBuffer.length}");
-        createDb(
+
+        await createDb(
             _dbBuffer,
             buildStep,
             dbVersion,
             dbName,
             entityGenerator.createStatements.toString(),
             entityGenerator.tablesMetaData);
-        log.warning("DBBB33=${_dbBuffer.length}");
+
         for (var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
         }
@@ -493,7 +493,7 @@ class DbGenerator extends Generator {
       String dbName, String dbTransaction, List<String> tablesMetaData) async {
     String db = await readAsset(
         AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
-    log.warning("DB=${db.length}");
+
    List<String> meta=[];
    for(var c in tablesMetaData) {
      meta.add("'$c'");
@@ -504,7 +504,7 @@ class DbGenerator extends Generator {
         .replaceFirst("dbTransaction", dbTransaction)
         .replaceFirst("TABLE_DETAILS", '$meta')
         .replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
-    log.warning("DB2=${db.length}");
+
     s.writeln(db);
   }
 
