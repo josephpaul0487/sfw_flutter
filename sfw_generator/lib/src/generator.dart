@@ -42,6 +42,8 @@ class DbGenerator extends Generator {
     await XmlDocs.isStringAsset(library, buildStep);
 //    if(await XmlDocs.isStyleAsset(library, buildStep) || await XmlDocs.isStringAsset(library, buildStep))
 //      return "";
+    await loadAssets(library, buildStep);
+
 
     final values = Set<String>();
     entityGenerator.EntitiesGenerator entities =
@@ -163,7 +165,7 @@ class DbGenerator extends Generator {
         }
         entityGenerator.typeDefs.clear();
         queryBuffer.writeln('');
-        await loadAssets(queryBuffer, buildStep);
+        //await loadAssets(queryBuffer, buildStep);
         //await XmlDocs.build(queryBuffer, buildStep);
         queryBuffer.writeln('//CODE GENERATION COMPLETED');
       }
@@ -457,18 +459,35 @@ class DbGenerator extends Generator {
     return methodBuilder.toString();
   }
 
-  Future loadAssets(StringBuffer s, BuildStep buildStep) async {
-    s.writeln(await readAsset(
-        AssetId("sfw_generator", "lib/src/assets/animation_helper.d"),
-        buildStep));
-    s.writeln(await readAsset(
-        AssetId("sfw_generator", "lib/src/assets/app_helper.d"), buildStep));
-    s.writeln(await readAsset(
-        AssetId("sfw_generator", "lib/src/assets/error_remover.d"), buildStep));
-    s.writeln(await readAsset(
-        AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
-    s.writeln(await readAsset(
-        AssetId("sfw_generator", "lib/src/assets/sfw_html.d"), buildStep));
+  Future loadAssets(LibraryReader library, BuildStep buildStep) async {
+    if (library.element.source.shortName == "animations.dart") {
+      buildStep.writeAsString(AssetId(buildStep.inputId.package,
+          buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+          await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/animation_helper.d"),
+              buildStep));
+    } else if (library.element.source.shortName == "sfw.dart") {
+      buildStep.writeAsString(AssetId(buildStep.inputId.package,
+          buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+          await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/app_helper.d"),
+              buildStep)+
+
+          await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/error_remover.d"),
+              buildStep));
+    } else if (library.element.source.shortName == "ui.dart") {
+      buildStep.writeAsString(AssetId(buildStep.inputId.package,
+          buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+          await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
+    } else if (library.element.source.shortName == "ui_helper.dart") {
+      buildStep.writeAsString(AssetId(buildStep.inputId.package,
+          buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
+          await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/sfw_html.d"),
+              buildStep));
+    }
   }
 
   Future createDb(StringBuffer s, BuildStep buildStep, int dbVersion,
