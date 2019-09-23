@@ -484,9 +484,7 @@ class DbGenerator extends Generator {
           buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
           _imports + await readAsset(
               AssetId("sfw_generator", "lib/src/assets/ui_helper.d"),
-              buildStep) + await readAsset(
-              AssetId("sfw_generator", "lib/src/assets/sfw_html.d"),
-              buildStep));
+              buildStep) );
     }
   }
 
@@ -494,6 +492,7 @@ class DbGenerator extends Generator {
       String dbName, String dbTransaction, List<String> tablesMetaData) async {
     String db = await readAsset(
         AssetId("sfw_generator", "lib/src/assets/db.d"), buildStep);
+    log.warning("DB=${db.length}");
    List<String> meta=[];
    for(var c in tablesMetaData) {
      meta.add("'$c'");
@@ -504,6 +503,7 @@ class DbGenerator extends Generator {
         .replaceFirst("dbTransaction", dbTransaction)
         .replaceFirst("TABLE_DETAILS", '$meta')
         .replaceAll("SFW_CONFIG_CLASS", dbOriginalClassName);
+    log.warning("DB2=${db.length}");
     s.writeln(db);
   }
 
