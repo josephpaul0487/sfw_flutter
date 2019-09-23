@@ -13,5 +13,5 @@ class SfwStyleAnnotation {
   final double inputPrefixIconSize;
   final double inputSuffixIconSize;
 
-  const SfwStyleAnnotation(  {this.inputIconSize, this.inputPrefixIconSize, this.inputSuffixIconSize,this.inputFocusIconColor, this.inputIconColor, this.inputFocusPrefixIconColor, this.inputPrefixIconColor, this.inputSuffixFocusIconColor, this.inputSuffixIconColor,this.stringFiles=const ["values/strings.xml"], this.constantsFile="values/constants.xml", this.colorFile="values/colors.xml", this.styleFile="values/styles.xml"});
+  const SfwStyleAnnotation(  {this.inputIconSize, this.inputPrefixIconSize, this.inputSuffixIconSize,this.inputFocusIconColor, this.inputIconColor, this.inputFocusPrefixIconColor, this.inputPrefixIconColor, this.inputSuffixFocusIconColor, this.inputSuffixIconColor,this.stringFiles=const ["sfw/strings.xml"], this.constantsFile="sfw/constants.xml", this.colorFile="sfw/colors.xml", this.styleFile="sfw/styles.xml"});
 }

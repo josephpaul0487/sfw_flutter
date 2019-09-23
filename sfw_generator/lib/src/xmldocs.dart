@@ -178,7 +178,7 @@ class XmlDocs {
   static _readColor(StringBuffer s, BuildStep buildStep) async {
     try {
       String appColors = await readAsset(
-          AssetId(buildStep.inputId.package, "lib/values/colors.xml"),
+          AssetId(buildStep.inputId.package, "lib/sfw/colors.xml"),
           buildStep);
       if (appColors.isNotEmpty) {
         s.writeln('///COLORS');
@@ -208,7 +208,7 @@ class XmlDocs {
   static _readDimens(StringBuffer s, BuildStep buildStep) async {
     try {
       String appDimens = await readAsset(
-          AssetId(buildStep.inputId.package, "lib/values/constants.xml"),
+          AssetId(buildStep.inputId.package, "lib/sfw/constants.xml"),
           buildStep);
       if (appDimens.isNotEmpty) {
         s.writeln('///CONSTANTS   --  String , bool , int , double');
