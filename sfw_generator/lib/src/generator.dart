@@ -132,6 +132,7 @@ class DbGenerator extends Generator {
               "_batch.insert('sfwMeta', {$map,'createdAt':'\$createdAt','updatedAt':'\$createdAt'});");
         }
 
+        log.warning("DBBB=${_dbBuffer.length}");
         createDb(
             _dbBuffer,
             buildStep,
@@ -139,7 +140,7 @@ class DbGenerator extends Generator {
             dbName,
             entityGenerator.createStatements.toString(),
             entityGenerator.tablesMetaData);
-
+        log.warning("DBBB33=${_dbBuffer.length}");
         for (var buffer in _mainBuffer) {
           _dbBuffer.write(buffer);
         }
