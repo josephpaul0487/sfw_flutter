@@ -266,11 +266,8 @@ Simple database generator (private use only)
         * A new file named "sfw.sfw.dart" will create after calling build_runner
         * This file includes the following classes - See above to see the description
 
-<<<<<<< HEAD
+
             1. SfwNotifier
-=======
-            #### SfwNotifier
->>>>>>> ad7e79e59a7f682046f4417c27169d8f29da6aad
             2. SfwNotifierForSingleKey
             3. SfwNotifierSingleKeyWidget
             4. SfwNotifierMultiKeyWidget
