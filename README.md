@@ -266,7 +266,7 @@ Simple database generator (private use only)
         * A new file named "sfw.sfw.dart" will create after calling build_runner
         * This file includes the following classes
 
-            1. SfwNotifier
+            ##### SfwNotifier
             2. SfwNotifierForSingleKey
             3. SfwNotifierSingleKeyWidget
             4. SfwNotifierMultiKeyWidget
@@ -274,9 +274,11 @@ Simple database generator (private use only)
             6. SfwState
 
 
+
+
   ####   strings.dart
 
-        * Create a class and annotate ite with SfwStyleAnnotation
+        * Create a class and annotate it with SfwStyleAnnotation
 
         @SfwStyleAnnotation(stringFiles: ["sfw/strings.xml","strings_en.xml","src/strings_de.xml"])
         class Strings {
@@ -358,7 +360,7 @@ Simple database generator (private use only)
   #### styles.dart
 
         * You can leave it as blank.
-        * You should create a new files under sfw folder named "colors.xml" and "constants.xml"
+        * You should create new files under "sfw" folder named "colors.xml" and "constants.xml"
 
         //Colors.xml
         <?xml version="1.0" encoding="UTF-8" ?>
