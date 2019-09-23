@@ -483,6 +483,8 @@ class DbGenerator extends Generator {
       buildStep.writeAsString(AssetId(buildStep.inputId.package,
           buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
           _imports + await readAsset(
+              AssetId("sfw_generator", "lib/src/assets/ui_helper.d"),
+              buildStep) + await readAsset(
               AssetId("sfw_generator", "lib/src/assets/sfw_html.d"),
               buildStep));
     }
