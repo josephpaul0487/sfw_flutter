@@ -40,6 +40,9 @@ Simple database generator (private use only)
       4. styles.dart
       5. ui.dart
       6. ui_helper.dart
+      7. colors.xml
+      8. constants.xml
+      9. String files -> see bottom
 
     ** See bottom of this ReadMe file to see how to configure the above files.
 
@@ -363,7 +366,7 @@ Simple database generator (private use only)
         * You can leave it as blank.
         * You should create new files under "sfw" folder named "colors.xml" and "constants.xml"
 
-        //Colors.xml
+        //colors.xml
         <?xml version="1.0" encoding="UTF-8" ?>
         <resources>
 
@@ -448,7 +451,7 @@ Simple database generator (private use only)
 
         </resources>
 
-        //Constants.xml
+        //constants.xml
         <?xml version="1.0" encoding="UTF-8" ?>
         <resources>
             <double name="tsTxtCommon" type="double">40.0</double>
