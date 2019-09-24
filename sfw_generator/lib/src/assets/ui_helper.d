@@ -227,14 +227,14 @@ class SfwUiHelper {
         : RoundedRectangleBorder(
         side: BorderSide(color: borderColor),
         borderRadius: BorderRadius.circular(SfwHelper.pxToDp(50)));
-    return Container(
-        height: height,
+    return SizedBox(
+        height: height==null?SfwHelper.setHeight(SfwConstants.hBtnCommon):height,
         child: RaisedButton(
           elevation: elevation,
           padding: padding,
-          color: backgroundColor ?? SfwColors.btnCommonBack,
+          color: backgroundColor ==null? SfwColors.btnCommonBack:backgroundColor,
           shape: border,
-          splashColor: splashColor ?? SfwColors.btnCommonSplashBack,
+          splashColor: splashColor ==null? SfwColors.btnCommonSplashBack:splashColor,
           child: buttonText(text, textStyle: textStyle),
           onPressed: OnClickListener(listener: onPressed).onClick,
         ));

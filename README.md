@@ -457,73 +457,73 @@ Simple database generator (private use only)
         //constants.xml
         <?xml version="1.0" encoding="UTF-8" ?>
         <resources>
-            <double name="tsTxtCommon" type="double">40.0</double>
-            <double name="tsTxtBoldCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsTxtSemiCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsTxtLightCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsTxtMediumCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsTxtSmallCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsBtnTxtCommon" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtCommon" type="double">@constant/tsTxtCommon</double>
+            <double name="tsTxtCommon" >40.0</double>
+            <double name="tsTxtBoldCommon" >@constant/tsTxtCommon</double>
+            <double name="tsTxtSemiCommon" >@constant/tsTxtCommon</double>
+            <double name="tsTxtLightCommon" >@constant/tsTxtCommon</double>
+            <double name="tsTxtMediumCommon" >@constant/tsTxtCommon</double>
+            <double name="tsTxtSmallCommon" >@constant/tsTxtCommon</double>
+            <double name="tsBtnTxtCommon" >@constant/tsTxtCommon</double>
+            <double name="tsEdtCommon" >@constant/tsTxtCommon</double>
 
-            <double name="tsEdtHint" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtCounter" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtLabel" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtError" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtPrefix" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtSuffix" type="double">@constant/tsTxtCommon</double>
-            <double name="tsEdtHelper" type="double">@constant/tsTxtCommon</double>
-
-
-            <double name="hEdtCommon" type="double">70.0</double>
-            <double name="hBtnCommon" type="double">60.0</double>
-            <double name="btnPadLeft" type="double">20.0</double>
-            <double name="btnPadRight" type="double">20.0</double>
-            <double name="btnElevation" type="double">3.0</double>
-
-            <double name="commonTopMargin" type="double">15.0</double>
-            <double name="edtIconPaddingLeft" type="double">10.0</double>
-            <double name="edtIconPaddingRight" type="double">10.0</double>
-            <double name="edtIconSize" type="double">40.0</double>
-            <double name="edtLeftPadding" type="double">10.0</double>
-            <double name="edtRightPadding" type="double">10.0</double>
-            <double name="edtBottomPadding" type="double">10.0</double>
-            <double name="edtBottomPaddingWhenUsingOutline" type="double">10.0</double>
-
-            <double name="edtCursorWidth" type="double">2.0</double>
-
-            <double name="cbIconSize" type="double">32.0</double>
-            <double name="cbTextLeftMargin" type="double">20.0</double>
-
-            <int name="edtMultiMaxLines"  type="int">8</int>
-            <int name="edtMultiMinLines" type="int">1</int>
-
-            <int name="edtMaxLength" type="int">255</int>
-            <int name="edtMultiMaxLength" type="int">800</int>
-
-            <int name="edtPasswordMinLength" type="int">6</int>
-            <int name="edtPasswordMaxLength" type="int">32</int>
+            <double name="tsEdtHint" >@constant/tsTxtCommon</double>
+            <double name="tsEdtCounter" >@constant/tsTxtCommon</double>
+            <double name="tsEdtLabel" >@constant/tsTxtCommon</double>
+            <double name="tsEdtError" >@constant/tsTxtCommon</double>
+            <double name="tsEdtPrefix" >@constant/tsTxtCommon</double>
+            <double name="tsEdtSuffix" >@constant/tsTxtCommon</double>
+            <double name="tsEdtHelper" >@constant/tsTxtCommon</double>
 
 
+            <double name="hEdtCommon" >70.0</double>
+            <double name="hBtnCommon" >120.0</double>
+            <double name="btnPadLeft" >20.0</double>
+            <double name="btnPadRight" >20.0</double>
+            <double name="btnElevation" >3.0</double>
 
-            <bool name="edtTextDirectionLtr" type="bool">true</bool>
-            <bool name="edtAutoCorrect" type="bool">true</bool>
-            <bool name="edtAutoFocus" type="bool">false</bool>
-            <bool name="edtShowCursor" type="bool">true</bool>
-            <bool name="edtAutoValidate" type="bool">false</bool>
-            <bool name="edtExpands" type="bool">false</bool>
-            <bool name="edtMaxLengthEnforced" type="bool">true</bool>
-            <bool name="edtEnableInteractiveSelection" type="bool">true</bool>
-            <bool name="edtIsBrightnessDark" type="bool">false</bool>
+            <double name="commonTopMargin" >15.0</double>
+            <double name="edtIconPaddingLeft" >10.0</double>
+            <double name="edtIconPaddingRight" >10.0</double>
+            <double name="edtIconSize" >50.0</double>
+            <double name="edtLeftPadding" >10.0</double>
+            <double name="edtRightPadding" >10.0</double>
+            <double name="edtBottomPadding" >10.0</double>
+            <double name="edtBottomPaddingWhenUsingOutline" >10.0</double>
+
+            <double name="edtCursorWidth" >2.0</double>
+
+            <double name="cbIconSize" >32.0</double>
+            <double name="cbTextLeftMargin" >20.0</double>
+
+            <int name="edtMultiMaxLines"  >8</int>
+            <int name="edtMultiMinLines" >1</int>
+
+            <int name="edtMaxLength" >255</int>
+            <int name="edtMultiMaxLength" >800</int>
+
+            <int name="edtPasswordMinLength" >6</int>
+            <int name="edtPasswordMaxLength" >32</int>
+
+
+
+            <bool name="edtTextDirectionLtr" >true</bool>
+            <bool name="edtAutoCorrect" >true</bool>
+            <bool name="edtAutoFocus" >false</bool>
+            <bool name="edtShowCursor" >true</bool>
+            <bool name="edtAutoValidate" >false</bool>
+            <bool name="edtExpands" >false</bool>
+            <bool name="edtMaxLengthEnforced" >true</bool>
+            <bool name="edtEnableInteractiveSelection" >true</bool>
+            <bool name="edtIsBrightnessDark" >false</bool>
 
             <!-- start , end , center , justify , left , right -->
-            <string name="edtTextAlign" type="String">start</string>
+            <string name="edtTextAlign" >start</string>
 
 
             <!-- The following constants are optional : These colors used to set the app theme. -->
-            <bool name="isDarkTheme" type="bool">false</bool>
-            <bool name="isPrimaryColorBrightnessIsDark" type="bool">false</bool>
-            <bool name="isAccentColorBrightnessIsDark" type="bool">false</bool>
+            <bool name="isDarkTheme" >false</bool>
+            <bool name="isPrimaryColorBrightnessIsDark" >false</bool>
+            <bool name="isAccentColorBrightnessIsDark" >false</bool>
 
         </resources>
 
