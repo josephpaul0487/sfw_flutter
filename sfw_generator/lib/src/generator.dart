@@ -479,11 +479,10 @@ class DbGenerator extends Generator {
           await readAsset(
               AssetId("sfw_generator", "lib/src/assets/sfw_ui.d"), buildStep));
     } else if (library.element.source.shortName == "ui_helper.dart") {
-      String _imports="import 'package:flutter/material.dart';"
-      '';
+
       buildStep.writeAsString(AssetId(buildStep.inputId.package,
           buildStep.inputId.path.replaceFirst(".dart", ".sfw.dart")),
-          _imports + await readAsset(
+          await readAsset(
               AssetId("sfw_generator", "lib/src/assets/ui_helper.d"),
               buildStep) );
     }
