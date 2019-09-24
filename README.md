@@ -24,6 +24,7 @@ Simple database generator (private use only)
           fluttertoast: ^3.1.2
           dio: ^2.1.16
           intl: ^0.16.0
+          flutter_datetime_picker: ^1.2.6
           analyzer: '0.38.2'  //0.38.3 have some build error. So use 0.38.2
 
         dev_dependencies:
