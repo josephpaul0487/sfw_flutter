@@ -15,28 +15,27 @@ class SfwNotifier {
   final Map<SfwNotifierListener, Set<String>> _listeners = {};
   static SfwNotifier _notifier = SfwNotifier();
 
-  //Map<SfwNotifierListener,Set<String>> get listener=>_listeners;
 
-  static addListener(SfwNotifierListener listener, Set<String> keys) {
+  static addListener(SfwNotifierListener listener, Set<String> keys,[SfwNotifier instance]) {
     if (listener == null)
       return;
-    Set<String> list = _notifier._listeners[listener];
+    Set<String> list = (instance ?? _notifier)._listeners[listener];
     if (list == null) {
       list = {};
     }
     if (keys != null)
       list.addAll(keys);
-    _notifier._listeners[listener] = list;
+    (instance ?? _notifier)._listeners[listener] = list;
   }
 
-  static removeListener(SfwNotifierListener listener) {
+  static removeListener(SfwNotifierListener listener,[SfwNotifier instance]) {
     if (listener == null)
       return;
-    _notifier._listeners.remove(listener);
+    (instance ?? _notifier)._listeners.remove(listener);
   }
 
-  static notify(String key, dynamic value) {
-    _notifier._listeners.forEach((listener, _keys) {
+  static notify(String key, dynamic value,[SfwNotifier instance]) {
+    (instance ?? _notifier)._listeners.forEach((listener, _keys) {
       if (listener != null && _keys.isEmpty || _keys.contains(key)) {
         listener.onSfwNotifierCalled(key, value);
       }
@@ -48,45 +47,48 @@ class SfwNotifierForSingleKey {
   final Map<String, Set<SfwNotifierListener>> _listeners = {};
   static SfwNotifierForSingleKey _notifier = SfwNotifierForSingleKey();
 
-  static addListener(SfwNotifierListener listener, String key) {
+  static addListener(SfwNotifierListener listener, String key,[SfwNotifierForSingleKey instance]) {
     if (listener == null || key == null || key
         .trim()
         .isEmpty)
       return;
-    Set<SfwNotifierListener> list = _notifier._listeners[key];
+    Set<SfwNotifierListener> list = (instance ?? _notifier)._listeners[key];
     if (list == null) {
       list = {};
     }
     list.add(listener);
-    _notifier._listeners[key] = list;
+    (instance ?? _notifier)._listeners[key] = list;
+
   }
 
-  static removeListener(SfwNotifierListener listener, String key) {
+  static removeListener(SfwNotifierListener listener, String key,[SfwNotifierForSingleKey instance]) {
     if (listener == null || key == null || key
         .trim()
         .isEmpty)
       return;
-    Set<SfwNotifierListener> list = _notifier._listeners[key];
+    Set<SfwNotifierListener> list = (instance ?? _notifier)._listeners[key];
     if (list == null) {
       return;
     }
     list.remove(listener);
     if (list.isEmpty) {
-      _notifier._listeners.remove(key);
+      (instance ?? _notifier)._listeners.remove(key);
     } else {
-      _notifier._listeners[key] = list;
+      (instance ?? _notifier)._listeners[key] = list;
     }
   }
 
-  static notify(String key, dynamic value) {
+  static notify(String key, dynamic value,[SfwNotifierForSingleKey instance]) {
     if (key == null || key
         .trim()
         .isEmpty)
-      return
-        _notifier._listeners[key].forEach((listener) {
-          if (listener != null)
-            listener.onSfwNotifierCalled(key, value);
-        });
+      return;
+
+    (instance ?? _notifier)._listeners[key].forEach((listener) {
+
+      if (listener != null)
+        listener.onSfwNotifierCalled(key, value);
+    });
   }
 }
 

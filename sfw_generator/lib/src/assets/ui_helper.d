@@ -9,8 +9,42 @@ import 'package:sfw_imports/sfw_imports.dart' show OnClickListener;
 import 'sfw.sfw.dart';
 import 'ui.sfw.dart' show SfwIconData, SfwTextInput, SfwTil, SfwTilTextsRelated;
 
-
 class SfwUiHelper {
+  static Row createNameValueRow(String left, String right,
+      {String separator = ":",
+        int leftFlex = 5,
+        int rightFlex = 8,
+        int separatorFlex = 1}) {
+    return createNameValueRowWithWidget(
+        Text(
+          left == null ? "" : left,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: SfwHelper.setSp(40)),
+        ),
+        Text(
+          separator == null ? "" : separator,
+          style: TextStyle(fontSize: SfwHelper.setSp(40)),
+        ),
+        Text(right == null ? "" : right,
+            style: TextStyle(fontSize: SfwHelper.setSp(45))));
+  }
+
+  static Row createNameValueRowWithWidget(
+      Widget left, Widget separator, Widget right,
+      {int leftFlex = 5, int rightFlex = 8, int separatorFlex = 1}) {
+    return Row(
+      children: <Widget>[
+        Expanded(flex: leftFlex, child: left),
+        separatorFlex < 1
+            ? SizedBox(
+          width: 1,
+        )
+            : Expanded(flex: separatorFlex, child: separator),
+        Expanded(flex: rightFlex, child: right)
+      ],
+    );
+  }
+
   static Widget iconTextColumn(SfwIconData icon, String label,
       {Function onPressed, textStyle, ShapeBorder shape}) {
     Widget child = Material(
@@ -191,14 +225,14 @@ class SfwUiHelper {
         ShapeBorder shape,
         Color borderColor = SfwColors.dividerColor,
         Color splashColor,
-        double height = SfwConstants.hBtnCommon,
+        double height,
         double widthFactor = 1,
         EdgeInsetsGeometry padding = const EdgeInsets.only(
             left: SfwConstants.btnPadLeft, right: SfwConstants.btnPadRight)}) {
     return FractionallySizedBox(
       widthFactor: widthFactor,
       child: raisedButton(text,
-          height: height,
+          height: height==null?SfwHelper.setHeight(SfwConstants.hBtnCommon):height,
           onPressed: onPressed,
           elevation: elevation,
           textStyle: textStyle,
@@ -228,13 +262,18 @@ class SfwUiHelper {
         side: BorderSide(color: borderColor),
         borderRadius: BorderRadius.circular(SfwHelper.pxToDp(50)));
     return SizedBox(
-        height: height==null?SfwHelper.setHeight(SfwConstants.hBtnCommon):height,
+        height: height == null
+            ? SfwHelper.setHeight(SfwConstants.hBtnCommon)
+            : height,
         child: RaisedButton(
           elevation: elevation,
           padding: padding,
-          color: backgroundColor ==null? SfwColors.btnCommonBack:backgroundColor,
+          color: backgroundColor == null
+              ? SfwColors.btnCommonBack
+              : backgroundColor,
           shape: border,
-          splashColor: splashColor ==null? SfwColors.btnCommonSplashBack:splashColor,
+          splashColor:
+          splashColor == null ? SfwColors.btnCommonSplashBack : splashColor,
           child: buttonText(text, textStyle: textStyle),
           onPressed: OnClickListener(listener: onPressed).onClick,
         ));
@@ -427,7 +466,7 @@ class SfwUiHelper {
         til.textsRelated.maxLines != null ? til.textsRelated.maxLines : 1,
         minLines:
         til.textsRelated.minLines != null && til.textsRelated.minLines < 1
-            ? null
+            ? til.textsRelated.maxLines!=null && til.textsRelated.maxLines>1?SfwConstants.edtMultiMinLines:1
             : til.textsRelated.minLines,
         autocorrect:
         til.booleans.autoCorrect != null ? til.booleans.autoCorrect : true,
@@ -737,25 +776,25 @@ class SfwUiHelper {
     return const EdgeInsets.only(bottom: 20, left: 20, right: 20);
   }
 }
+
 class SfwHtmlParser {
   static SfwHtmlParser parser;
-  HtmlParser _htmlParser=HtmlParser();
+  HtmlParser _htmlParser = HtmlParser();
 
   static SfwHtmlParser getInstance() {
-    if(parser==null) {
-      parser=SfwHtmlParser();
+    if (parser == null) {
+      parser = SfwHtmlParser();
     }
     return parser;
   }
 
-
-  TextSpan getSpan(BuildContext context,String data) {
-    List nodes        = _htmlParser.parse(data);
+  TextSpan getSpan(BuildContext context, String data) {
+    List nodes = _htmlParser.parse(data);
     return this._stackToTextSpan(nodes, context);
   }
 
-  RichText getWidget(BuildContext context,String data) {
-    return RichText(text: getSpan(context,data));
+  RichText getWidget(BuildContext context, String data) {
+    return RichText(text: getSpan(context, data));
   }
 
   TextSpan _stackToTextSpan(List nodes, BuildContext context) {
@@ -766,10 +805,9 @@ class SfwHtmlParser {
     }
 
     return new TextSpan(
-        text:     '',
-        style:    DefaultTextStyle.of(context).style,
-        children: children
-    );
+        text: '',
+        style: DefaultTextStyle.of(context).style,
+        children: children);
   }
 
   // =================================================================================================================
@@ -781,8 +819,6 @@ class SfwHtmlParser {
   }
 }
 
-
-
 class HtmlParser {
   // Regular Expressions for parsing tags and attributes
   RegExp _startTag;
@@ -791,24 +827,133 @@ class HtmlParser {
   RegExp _style;
   RegExp _color;
 
-  final List _emptyTags     = const ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input',
-    'isindex', 'link', 'meta', 'param', 'embed'];
-  final List _blockTags     = const ['address', 'applet', 'blockquote', 'button', 'center', 'dd', 'del', 'dir',
-    'div', 'dl', 'dt', 'fieldset', 'form', 'frameset', 'hr', 'iframe', 'ins',
-    'isindex', 'li', 'map', 'menu', 'noframes', 'noscript', 'object', 'ol',
-    'p', 'pre', 'script', 'table', 'tbody', 'td', 'tfoot', 'th', 'thead',
-    'tr', 'ul'];
-  final List _inlineTags    = const ['a', 'abbr', 'acronym', 'applet', 'b', 'basefont', 'bdo', 'big', 'br', 'button',
-    'cite', 'code', 'del', 'dfn', 'em', 'font', 'i', 'iframe', 'img', 'input',
-    'ins', 'kbd', 'label', 'map', 'object', 'q', 's', 'samp', 'script',
-    'select', 'small', 'span', 'strike', 'strong', 'sub', 'sup', 'textarea',
-    'tt', 'u', 'var'];
-  final List _closeSelfTags = const ['colgroup', 'dd', 'dt', 'li', 'options', 'p', 'td', 'tfoot', 'th', 'thead', 'tr'];
-  final List _fillAttrs     = const ['checked', 'compact', 'declare', 'defer', 'disabled', 'ismap', 'multiple',
-    'nohref', 'noresize', 'noshade', 'nowrap', 'readonly', 'selected'];
-  final List _specialTags   = const ['script', 'style'];
+  final List _emptyTags = const [
+    'area',
+    'base',
+    'basefont',
+    'br',
+    'col',
+    'frame',
+    'hr',
+    'img',
+    'input',
+    'isindex',
+    'link',
+    'meta',
+    'param',
+    'embed'
+  ];
+  final List _blockTags = const [
+    'address',
+    'applet',
+    'blockquote',
+    'button',
+    'center',
+    'dd',
+    'del',
+    'dir',
+    'div',
+    'dl',
+    'dt',
+    'fieldset',
+    'form',
+    'frameset',
+    'hr',
+    'iframe',
+    'ins',
+    'isindex',
+    'li',
+    'map',
+    'menu',
+    'noframes',
+    'noscript',
+    'object',
+    'ol',
+    'p',
+    'pre',
+    'script',
+    'table',
+    'tbody',
+    'td',
+    'tfoot',
+    'th',
+    'thead',
+    'tr',
+    'ul'
+  ];
+  final List _inlineTags = const [
+    'a',
+    'abbr',
+    'acronym',
+    'applet',
+    'b',
+    'basefont',
+    'bdo',
+    'big',
+    'br',
+    'button',
+    'cite',
+    'code',
+    'del',
+    'dfn',
+    'em',
+    'font',
+    'i',
+    'iframe',
+    'img',
+    'input',
+    'ins',
+    'kbd',
+    'label',
+    'map',
+    'object',
+    'q',
+    's',
+    'samp',
+    'script',
+    'select',
+    'small',
+    'span',
+    'strike',
+    'strong',
+    'sub',
+    'sup',
+    'textarea',
+    'tt',
+    'u',
+    'var'
+  ];
+  final List _closeSelfTags = const [
+    'colgroup',
+    'dd',
+    'dt',
+    'li',
+    'options',
+    'p',
+    'td',
+    'tfoot',
+    'th',
+    'thead',
+    'tr'
+  ];
+  final List _fillAttrs = const [
+    'checked',
+    'compact',
+    'declare',
+    'defer',
+    'disabled',
+    'ismap',
+    'multiple',
+    'nohref',
+    'noresize',
+    'noshade',
+    'nowrap',
+    'readonly',
+    'selected'
+  ];
+  final List _specialTags = const ['script', 'style'];
 
-  List _stack  = [];
+  List _stack = [];
   List _result = [];
 
   Map<String, dynamic> _tag;
@@ -816,11 +961,15 @@ class HtmlParser {
   // =================================================================================================================
 
   HtmlParser() {
-    this._startTag = new RegExp(r'^<([-A-Za-z0-9_]+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")' + "|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>");
-    this._endTag   = new RegExp("^<\/([-A-Za-z0-9_]+)[^>]*>");
-    this._attr     = new RegExp(r'([-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")' + r"|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?");
-    this._style    = new RegExp(r'([a-zA-Z\-]+)\s*:\s*([^;]*)');
-    this._color    = new RegExp(r'^#([a-fA-F0-9]{6})$');
+    this._startTag = new RegExp(
+        r'^<([-A-Za-z0-9_]+)((?:\s+\w+(?:\s*=\s*(?:(?:"[^"]*")' +
+            "|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>");
+    this._endTag = new RegExp("^<\/([-A-Za-z0-9_]+)[^>]*>");
+    this._attr = new RegExp(
+        r'([-A-Za-z0-9_]+)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")' +
+            r"|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?");
+    this._style = new RegExp(r'([a-zA-Z\-]+)\s*:\s*([^;]*)');
+    this._color = new RegExp(r'^#([a-fA-F0-9]{6})$');
   }
 
   // =================================================================================================================
@@ -835,7 +984,8 @@ class HtmlParser {
       chars = true;
 
       // Make sure we're not in a script or style element
-      if (this._getStackLastItem() == null || !this._specialTags.contains(this._getStackLastItem())) {
+      if (this._getStackLastItem() == null ||
+          !this._specialTags.contains(this._getStackLastItem())) {
         // Comment
         if (html.indexOf('<!--') == 0) {
           index = html.indexOf('-->');
@@ -852,7 +1002,7 @@ class HtmlParser {
           if (match != null) {
             String tag = match[0];
 
-            html  = html.substring(tag.length);
+            html = html.substring(tag.length);
             chars = false;
 
             this._parseEndTag(tag);
@@ -865,7 +1015,7 @@ class HtmlParser {
           if (match != null) {
             String tag = match[0];
 
-            html  = html.substring(tag.length);
+            html = html.substring(tag.length);
             chars = false;
 
             this._parseStartTag(tag, match[1], match[2], match.start);
@@ -881,9 +1031,9 @@ class HtmlParser {
 
           this._appendNode(text);
         }
-      }
-      else {
-        RegExp re = new RegExp(r'(.*)<\/' + this._getStackLastItem() + r'[^>]*>');
+      } else {
+        RegExp re =
+        new RegExp(r'(.*)<\/' + this._getStackLastItem() + r'[^>]*>');
 
         html = html.replaceAllMapped(re, (Match match) {
           String text = match[0]
@@ -911,7 +1061,7 @@ class HtmlParser {
     List result = this._result;
 
     // Cleanup internal variables
-    this._stack  = [];
+    this._stack = [];
     this._result = [];
 
     return result;
@@ -923,12 +1073,14 @@ class HtmlParser {
     tagName = tagName.toLowerCase();
 
     if (this._blockTags.contains(tagName)) {
-      while (this._getStackLastItem() != null && this._inlineTags.contains(this._getStackLastItem())) {
+      while (this._getStackLastItem() != null &&
+          this._inlineTags.contains(this._getStackLastItem())) {
         this._parseEndTag(this._getStackLastItem());
       }
     }
 
-    if (this._closeSelfTags.contains(tagName) && this._getStackLastItem() == tagName) {
+    if (this._closeSelfTags.contains(tagName) &&
+        this._getStackLastItem() == tagName) {
       this._parseEndTag(tagName);
     }
 
@@ -951,14 +1103,11 @@ class HtmlParser {
 
         if (match[2] != null) {
           value = match[2];
-        }
-        else if (match[3] != null) {
+        } else if (match[3] != null) {
           value = match[3];
-        }
-        else if (match[4] != null) {
+        } else if (match[4] != null) {
           value = match[4];
-        }
-        else if (this._fillAttrs.contains(attribute) != null) {
+        } else if (this._fillAttrs.contains(attribute) != null) {
           value = attribute;
         }
 
@@ -1001,9 +1150,9 @@ class HtmlParser {
     String param;
     String value;
 
-    Color color                   = new Color(0xFF000000);
-    FontWeight fontWeight         = FontWeight.normal;
-    FontStyle fontStyle           = FontStyle.normal;
+    Color color = new Color(0xFF000000);
+    FontWeight fontWeight = FontWeight.normal;
+    FontStyle fontStyle = FontStyle.normal;
     TextDecoration textDecoration = TextDecoration.none;
 
     switch (tag) {
@@ -1043,17 +1192,21 @@ class HtmlParser {
             break;
 
           case 'font-weight':
-            fontWeight = (value == 'bold') ? FontWeight.bold : FontWeight.normal;
+            fontWeight =
+            (value == 'bold') ? FontWeight.bold : FontWeight.normal;
 
             break;
 
           case 'font-style':
-            fontStyle = (value == 'italic') ? FontStyle.italic : FontStyle.normal;
+            fontStyle =
+            (value == 'italic') ? FontStyle.italic : FontStyle.normal;
 
             break;
 
           case 'text-decoration':
-            textDecoration = (value == 'underline') ? TextDecoration.underline : TextDecoration.none;
+            textDecoration = (value == 'underline')
+                ? TextDecoration.underline
+                : TextDecoration.none;
 
             break;
         }
@@ -1061,11 +1214,10 @@ class HtmlParser {
     }
 
     TextStyle textStyle = new TextStyle(
-        color:      color,
+        color: color,
         fontWeight: fontWeight,
-        fontStyle:  fontStyle,
-        decoration: textDecoration
-    );
+        fontStyle: fontStyle,
+        decoration: textDecoration);
 
     return textStyle;
   }
@@ -1073,25 +1225,20 @@ class HtmlParser {
   // =================================================================================================================
 
   void _appendTag(String tag, Map attrs) {
-    this._tag = {
-      'tag':   tag,
-      'attrs': attrs
-    };
+    this._tag = {'tag': tag, 'attrs': attrs};
   }
 
   // =================================================================================================================
 
   void _appendNode(String text) {
     if (this._tag == null) {
-      this._tag = {
-        'tag':   'p',
-        'attrs': {}
-      };
+      this._tag = {'tag': 'p', 'attrs': {}};
     }
 
-    this._tag['text']  = text;
+    this._tag['text'] = text;
     this._tag['style'] = this._parseStyle(this._tag['tag'], this._tag['attrs']);
-    this._tag['href']  = (this._tag['attrs']['href'] != null) ? this._tag['attrs']['href'] : '';
+    this._tag['href'] =
+    (this._tag['attrs']['href'] != null) ? this._tag['attrs']['href'] : '';
 
     this._tag.remove('attrs');
 
