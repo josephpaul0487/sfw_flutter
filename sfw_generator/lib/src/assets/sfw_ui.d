@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'strings.sfw.dart';
 import 'styles.sfw.dart';
-import 'package:sfw_imports/sfw_imports.dart' show OnClickCallback2,Validator;
+import 'package:sfw_imports/sfw_imports.dart' show OnClickCallback2, Validator;
 import 'package:flutter/material.dart';
 import 'ui_helper.sfw.dart';
 import 'sfw.sfw.dart';
@@ -15,15 +15,45 @@ class ProgressButtonModel {
   OnClickCallback2 onPressed;
   int milliSecondsToNormal;
   int id;
+  double elevation;
+  TextStyle textStyle;
 
+  final Color backgroundColor;
+  final Color splashColor;
+  final ShapeBorder shape;
+  final Color borderColor;
 
-  ProgressButtonModel( this.text, this.onPressed,
-      {this.state=ProgressButtonStates.normal,this.milliSecondsToNormal=-1,this.id=0});
+  final double height;
+
+  final double widthFactor ;
+  final EdgeInsetsGeometry padding;
+  final Color progressColor;
+  final Widget progressWidget;
+  SfwIconData successWidget;
+
+  ProgressButtonModel(this.text, this.onPressed,
+      {this.state = ProgressButtonStates.normal,
+        this.milliSecondsToNormal = -1,
+        this.id = 0,
+        this.elevation = SfwConstants.btnElevation,
+        this.textStyle = const TextStyle(
+            color: SfwColors.btnTxtCommon, fontWeight: FontWeight.bold),
+        this.backgroundColor,
+        this.shape,
+        this.borderColor = SfwColors.dividerColor,
+        this.splashColor=SfwColors.btnCommonSplashBack,
+        this.successWidget,
+        this.progressColor=SfwColors.accentColor,
+        this.progressWidget,
+        this.height = SfwConstants.hBtnCommon,
+        this.widthFactor = 1,
+        this.padding = const EdgeInsets.only(
+            left: SfwConstants.btnPadLeft, right: SfwConstants.btnPadRight),
+      });
 
   String get listenerKey => "$listenerKeySuffix$id";
 
   static String get listenerKeySuffix => "ProgressButton";
-
 }
 
 class SfwIconData {
@@ -41,7 +71,8 @@ class SfwIconData {
         this.focusTint,
         this.widget,
         this.iconPadding = const EdgeInsets.only(
-            left: SfwConstants.edtIconPaddingLeft, right: SfwConstants.edtIconPaddingRight),
+            left: SfwConstants.edtIconPaddingLeft,
+            right: SfwConstants.edtIconPaddingRight),
         this.size = SfwConstants.edtIconSize,
         this.onPressed});
 }
@@ -300,7 +331,7 @@ class SfwTilBool {
         this.enabled = true,
         this.enableInteractiveSelection = true,
         this.hasFloatingPlaceholder = true,
-        this.showCursor=true,
+        this.showCursor = true,
         this.isDense,
         this.filled,
         this.alignLabelWithHint,
@@ -507,6 +538,7 @@ class _TilPasswordState extends State<TilPassword> {
 
 class ProgressButton extends StatefulWidget {
   final ProgressButtonModel model;
+  final String stateKey;
 
   @override
   State<StatefulWidget> createState() {
@@ -516,19 +548,39 @@ class ProgressButton extends StatefulWidget {
   /// milliSecondsToNormal -> set -1 to avoid the button state is reset to normal
   ProgressButton(
       this.model,
-      );
+      [this.stateKey,]
+      ):assert(model!=null);
 }
 
 enum ProgressButtonStates { normal, success, progress }
 
-class _ProgressButtonState extends State<ProgressButton> {
+class _ProgressButtonState extends State<ProgressButton> implements SfwNotifierListener {
   ProgressButtonModel _model;
 
   _ProgressButtonState();
 
   @override
+  void onSfwNotifierCalled(String key, data) {
+    if(data is ProgressButtonModel) {
+      _model.text=data.text==null?_model.text:data.text;
+      _model.state=data.state==null?_model.state:data.state;
+      setState(() {
+
+      });
+    }
+  }
+
+  @override
   void initState() {
     this._model = widget.model;
+    if(_model.successWidget==null  ) {
+      _model.successWidget=SfwIconData(widget:Icon( Icons.check,size: SfwHelper.setHeight(_model.height==null?SfwConstants.hBtnCommon:_model.height), color: SfwColors.accentColor));
+    } else if(_model.successWidget.widget==null) {
+      _model.successWidget=SfwIconData(widget:Icon( _model.successWidget.icon==null?Icons.check:_model.successWidget.icon,size: _model.successWidget.size!=null?_model.successWidget.size:SfwHelper.setHeight(_model.height==null?SfwConstants.hBtnCommon:_model.height), color: _model.successWidget.tint==null?SfwColors.accentColor:_model.successWidget.tint));
+    }
+
+    SfwNotifierForSingleKey.addListener(this, widget.stateKey);
+
     if (_model.state != ProgressButtonStates.normal &&
         _model.milliSecondsToNormal > -1)
       runTimer(_model.milliSecondsToNormal, ProgressButtonStates.normal);
@@ -537,10 +589,16 @@ class _ProgressButtonState extends State<ProgressButton> {
   }
 
   @override
+  void dispose() {
+    SfwNotifierForSingleKey.removeListener(this, widget.stateKey);
+    super.dispose();
+  }
+
+  /*@override
   void didUpdateWidget(ProgressButton oldWidget) {
     _model = widget.model;
     super.didUpdateWidget(oldWidget);
-  }
+  }*/
 
   void changeState(ProgressButtonStates state) {
     setState(() {
@@ -559,11 +617,11 @@ class _ProgressButtonState extends State<ProgressButton> {
   Widget build(BuildContext context) {
     switch (_model.state) {
       case ProgressButtonStates.progress:
-        return CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-        );
+        return Center(child: _model.progressWidget!=null?_model.progressWidget:CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(_model.progressColor==null?SfwColors.accentColor:_model.progressColor),
+        ),);
       case ProgressButtonStates.success:
-        return Icon(Icons.check, color: Colors.red);
+        return Center(child: _model.successWidget.widget);
       default:
         return SfwUiHelper.button(_model.text, () async {
           setState(() {
@@ -572,7 +630,7 @@ class _ProgressButtonState extends State<ProgressButton> {
           if (_model.onPressed == null || !await _model.onPressed()) {
             runTimer(1000, ProgressButtonStates.normal);
           }
-        });
+        },height: _model.height==null?null:SfwHelper.setHeight(_model.height),backgroundColor: _model.backgroundColor,shape: _model.shape,splashColor: _model.splashColor,widthFactor: _model.widthFactor,padding: _model.padding,borderColor: _model.borderColor,textStyle: _model.textStyle,elevation: _model.elevation);
     }
   }
 }
@@ -640,7 +698,6 @@ class _SfwTextInputState extends State<SfwTextInput> {
           baseOffset: controller.text == null ? 0.0 : controller.text.length,
           extentOffset: controller.text == null ? 0.0 : controller.text.length);
     }
-
   }
 
   @override
@@ -774,7 +831,9 @@ class _SfwTextInputState extends State<SfwTextInput> {
         bottom: SfwHelper.setHeight(widget.til.booleans.isOutline == null ||
             !widget.til.booleans.isOutline
             ? SfwConstants.edtBottomPadding
-            : SfwConstants.edtBottomPaddingWhenUsingOutline + SfwConstants.edtIconSize - 20) +
+            : SfwConstants.edtBottomPaddingWhenUsingOutline +
+            SfwConstants.edtIconSize -
+            20) +
             topBottom,
         top: topBottom)
         : EdgeInsets.only(
@@ -791,10 +850,14 @@ class _SfwTextInputState extends State<SfwTextInput> {
         widget.til.icons.icon.widget != null) {
       Color iconColor = _focusNode.hasFocus
           ? widget.til.icons.icon.focusTint == null
-          ? SfwColors.edtIconFocused == null ? tilFocusedColor : SfwColors.edtIconFocused
+          ? SfwColors.edtIconFocused == null
+          ? tilFocusedColor
+          : SfwColors.edtIconFocused
           : widget.til.icons.icon.focusTint
           : widget.til.icons.icon.tint == null
-          ? SfwColors.edtIconNormal == null ? tilNormalColor : SfwColors.edtIconNormal
+          ? SfwColors.edtIconNormal == null
+          ? tilNormalColor
+          : SfwColors.edtIconNormal
           : widget.til.icons.icon.tint;
       _iconRightMargin = _iconRightPadding;
 
@@ -1147,7 +1210,8 @@ class _SfwCheckBoxState extends State<SfwCheckBox> {
               color: _isChecked
                   ? widget.checkedColor ?? SfwColors.cbTintChecked
                   : widget.normalColor ?? SfwColors.cbTintNormal,
-              size: SfwHelper.pxToDp(widget.iconSize ?? SfwConstants.cbIconSize),
+              size:
+              SfwHelper.pxToDp(widget.iconSize ?? SfwConstants.cbIconSize),
             ),
             widget.text == null
                 ? Text("")
@@ -1209,9 +1273,17 @@ class AppUi {
 
   static SfwTextInput input(String text, String label, Function(String) onSaved,
       {TextInputType inputType = TextInputType.text,
-        TextInputAction inputAction: TextInputAction.next,int maxLines,int minLines,int maxLength,int minLength,
+        TextInputAction inputAction: TextInputAction.next,
+        int maxLines,
+        int minLines,
+        int maxLength,
+        int minLength,
         String error,
-        bool isEnabled = true,bool isOutline=true,TextEditingController controller,FocusNode focusNode,SfwTilIcons icons=const SfwTilIcons()}) {
+        bool isEnabled = true,
+        bool isOutline = true,
+        TextEditingController controller,
+        FocusNode focusNode,
+        SfwTilIcons icons = const SfwTilIcons()}) {
     return SfwTextInput(
       til: SfwTil(
           texts: SfwTilText(
@@ -1220,10 +1292,25 @@ class AppUi {
             errorText: error,
           ),
           icons: icons,
-          actions: SfwTilActions(onSaved: onSaved,controller: controller,focusNode: focusNode,),
-          booleans: SfwTilBool(isOutline: isOutline,enabled: isEnabled,),
-          textProperty: SfwTilTextProperty(inputType: inputType,inputAction: inputAction,),
-          textsRelated: SfwTilTextsRelated(maxLines: maxLines,minLines: minLines,maxLength: maxLength,minLength: minLength,)),
+          actions: SfwTilActions(
+            onSaved: onSaved,
+            controller: controller,
+            focusNode: focusNode,
+          ),
+          booleans: SfwTilBool(
+            isOutline: isOutline,
+            enabled: isEnabled,
+          ),
+          textProperty: SfwTilTextProperty(
+            inputType: inputType,
+            inputAction: inputAction,
+          ),
+          textsRelated: SfwTilTextsRelated(
+            maxLines: maxLines,
+            minLines: minLines,
+            maxLength: maxLength,
+            minLength: minLength,
+          )),
     );
   }
 }
