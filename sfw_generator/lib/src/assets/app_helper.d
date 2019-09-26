@@ -84,6 +84,7 @@ class SfwNotifierForSingleKey {
         .isEmpty)
       return;
 
+
     (instance ?? _notifier)._listeners[key].forEach((listener) {
 
       if (listener != null)
@@ -113,6 +114,7 @@ class _SfwNotifierWidgetState extends State<SfwNotifierSingleKeyWidget>
 
   dynamic data;
 
+
   @override
   void initState() {
     data = widget.initialData;
@@ -122,7 +124,9 @@ class _SfwNotifierWidgetState extends State<SfwNotifierSingleKeyWidget>
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(widget.notifierKey, data);
+    Widget w= widget.builder(widget.notifierKey, data);
+    this.data=widget.initialData;//to avoid holding data -> it may cause error in ListView
+    return w;
   }
 
   @override
@@ -173,7 +177,10 @@ class _SfwNotifierMultiKeyWidgetState extends State<SfwNotifierMultiKeyWidget>
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(key, data);
+    Widget w= widget.builder(key, data);
+    this.key=null;
+    this.data=widget.initialData;//to avoid holding data -> it may cause error in ListView
+    return w;
   }
 
   @override
@@ -284,7 +291,6 @@ class SfwHelper {
     try {
       return DateFormat(toFormat).format(DateFormat(fromFormat).parse(date));
     } catch (e) {
-      print(e);
       return "";
     }
   }
@@ -450,7 +456,6 @@ abstract class SfwState <T extends StatefulWidget> extends State<T> {
       if(mounted)
         super.setState(fn==null?(){}:fn);
     } catch(e) {
-      print(e);
     }
   }
 

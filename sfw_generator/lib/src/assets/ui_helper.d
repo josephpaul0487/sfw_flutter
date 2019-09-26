@@ -14,10 +14,10 @@ class SfwUiHelper {
       {String separator = ":",
         int leftFlex = 5,
         int rightFlex = 8,
-        int separatorFlex = 1}) {
+        int separatorFlex = 1,int leftMaxLine=1,int rightMaxLine=1}) {
     return createNameValueRowWithWidget(
         Text(
-          left == null ? "" : left,
+          left == null ? "" : left,maxLines: leftMaxLine,
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: SfwHelper.setSp(40)),
         ),
@@ -25,7 +25,7 @@ class SfwUiHelper {
           separator == null ? "" : separator,
           style: TextStyle(fontSize: SfwHelper.setSp(40)),
         ),
-        Text(right == null ? "" : right,
+        Text(right == null ? "" : right,maxLines: rightMaxLine,
             style: TextStyle(fontSize: SfwHelper.setSp(45))));
   }
 
@@ -451,7 +451,7 @@ class SfwUiHelper {
         textCapitalization: til.textProperty.textCapitalization != null
             ? til.textProperty.textCapitalization
             : TextCapitalization.none,
-        textInputAction: til.textProperty.inputAction,
+        textInputAction: til.textProperty.inputAction==null && til.textProperty.inputType==TextInputType.multiline?TextInputAction.newline:til.textProperty.inputAction,
         style: til.styles.style != null
             ? til.styles.style
             : AppTextStyles.normal(),
