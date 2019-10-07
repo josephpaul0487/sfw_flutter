@@ -219,10 +219,11 @@ class XmlDocs {
         s.writeln('///CONSTANTS   --  String , bool , int , double');
         s.writeln('class SfwConstants {');
         xml.XmlDocument document = xml.parse(appDimens);
-        _nodeToConstant("String", s, document.findAllElements("string"), buildStep);
-        _nodeToConstant("bool", s, document.findAllElements("bool"), buildStep);
-        _nodeToConstant("int", s, document.findAllElements("int"), buildStep);
-        _nodeToConstant("double", s, document.findAllElements("double"), buildStep);
+        StringBuffer convertedConstants=StringBuffer();
+        _nodeToConstant("String", s,convertedConstants, document.findAllElements("string"), buildStep);
+        _nodeToConstant("bool", s,convertedConstants, document.findAllElements("bool"), buildStep);
+        _nodeToConstant("int", s,convertedConstants, document.findAllElements("int"), buildStep);
+        _nodeToConstant("double", s,convertedConstants, document.findAllElements("double"), buildStep);
 
         s.writeln("}");
       }
@@ -232,7 +233,7 @@ class XmlDocs {
     }
   }
 
-  static _nodeToConstant(String type,StringBuffer s, Iterable<xml.XmlElement> children, BuildStep buildStep) {
+  static _nodeToConstant(String type,StringBuffer s,StringBuffer convertedConstants, Iterable<xml.XmlElement> children, BuildStep buildStep) {
 
       for (final node in children) {
         if (node.nodeType != xml.XmlNodeType.ELEMENT) {
@@ -244,15 +245,25 @@ class XmlDocs {
           dimenCode = dimenCode.substring(dimenCode.indexOf("/") + 1);
         }
         String key;
+        bool convertConstant=false;
         node.attributes.forEach((attr) {
           if (attr.name.local == "name") key = attr.value;
+          if (attr.name.local == "convert") convertConstant = attr.value=="true";
         });
         if (key == null || key.isEmpty) return;
         if (type != null && type.toLowerCase() == "string")
           s.writeln("static const String $key = '$dimenCode';");
-        else
+        else if(convertConstant && (type=="double" || type==null || type=="int")){
+          convertedConstants.writeln(
+              " ${type == null
+                  ? 'double'
+                  : type} $key = $dimenCode;");
+        } else {
           s.writeln(
-              "static const ${type == null ? 'double' : type} $key = $dimenCode;");
+              "static const ${type == null
+                  ? 'double'
+                  : type} $key = $dimenCode;");
+        }
       }
   }
 
